@@ -299,6 +299,7 @@ class SourceCache extends Evented {
 
         function fillBorder(tile, borderTile) {
             tile.needsHillshadePrepare = true;
+            tile.needsAvalanchePrepare = true;
             tile.needsTerrainPrepare = true;
             let dx = borderTile.tileID.canonical.x - tile.tileID.canonical.x;
             const dy = borderTile.tileID.canonical.y - tile.tileID.canonical.y;

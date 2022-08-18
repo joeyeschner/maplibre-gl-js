@@ -602,6 +602,17 @@
             }
           }
         },
+        "avalanche": {
+          "doc": "Client-side avalanche risk visualization based on DEM data. Currently, the implementation only supports Mapbox Terrain RGB and Mapzen Terrarium tiles.",
+          "sdk-support": {
+            "basic functionality": {
+              "js": "0.43.0",
+              "android": "6.0.0",
+              "ios": "4.0.0",
+              "macos": "0.7.0"
+            }
+          }
+        },
         "background": {
           "doc": "The background color or pattern of the map.",
           "sdk-support": {
@@ -663,6 +674,7 @@
     "layout_symbol",
     "layout_raster",
     "layout_hillshade",
+    "layout_avalanche",
     "layout_background"
   ],
   "layout_background": {
@@ -2529,6 +2541,30 @@
       "property-type": "constant"
     }
   },
+  "layout_avalanche": {
+    "visibility": {
+      "type": "enum",
+      "values": {
+        "visible": {
+          "doc": "The layer is shown."
+        },
+        "none": {
+          "doc": "The layer is not shown."
+        }
+      },
+      "default": "visible",
+      "doc": "Whether this layer is displayed.",
+      "sdk-support": {
+        "basic functionality": {
+          "js": "0.43.0",
+          "android": "6.0.0",
+          "ios": "4.0.0",
+          "macos": "0.7.0"
+        }
+      },
+      "property-type": "constant"
+    }
+  },
   "filter": {
     "type": "array",
     "value": "*",
@@ -3864,6 +3900,7 @@
     "paint_symbol",
     "paint_raster",
     "paint_hillshade",
+    "paint_avalanche",
     "paint_background"
   ],
   "paint_fill": {
@@ -5887,6 +5924,145 @@
       "property-type": "data-constant"
     },
     "hillshade-accent-color": {
+      "type": "color",
+      "default": "#000000",
+      "doc": "The shading color used to accentuate rugged terrain like sharp cliffs and gorges.",
+      "transition": true,
+      "sdk-support": {
+        "basic functionality": {
+          "js": "0.43.0",
+          "android": "6.0.0",
+          "ios": "4.0.0",
+          "macos": "0.7.0"
+        }
+      },
+      "expression": {
+        "interpolated": true,
+        "parameters": [
+          "zoom"
+        ]
+      },
+      "property-type": "data-constant"
+    }
+  },
+  "paint_avalanche": {
+    "avalanche-illumination-direction": {
+      "type": "number",
+      "default": 335,
+      "minimum": 0,
+      "maximum": 359,
+      "doc": "The direction of the light source used to generate the avalanche visualization with 0 as the top of the viewport if `avalanche-illumination-anchor` is set to `viewport` and due north if `avalanche-illumination-anchor` is set to `map`.",
+      "transition": false,
+      "sdk-support": {
+        "basic functionality": {
+          "js": "0.43.0",
+          "android": "6.0.0",
+          "ios": "4.0.0",
+          "macos": "0.7.0"
+        }
+      },
+      "expression": {
+        "interpolated": true,
+        "parameters": [
+          "zoom"
+        ]
+      },
+      "property-type": "data-constant"
+    },
+    "avalanche-illumination-anchor": {
+      "type": "enum",
+      "values": {
+        "map": {
+          "doc": "The avalanche illumination is relative to the north direction."
+        },
+        "viewport": {
+          "doc": "The avalanche illumination is relative to the top of the viewport."
+        }
+      },
+      "default": "viewport",
+      "doc": "Direction of light source when map is rotated.",
+      "sdk-support": {
+        "basic functionality": {
+          "js": "0.43.0",
+          "android": "6.0.0",
+          "ios": "4.0.0",
+          "macos": "0.7.0"
+        }
+      },
+      "expression": {
+        "interpolated": false,
+        "parameters": [
+          "zoom"
+        ]
+      },
+      "property-type": "data-constant"
+    },
+    "avalanche-exaggeration": {
+      "type": "number",
+      "doc": "Intensity of the avalanche visualization",
+      "default": 0.5,
+      "minimum": 0,
+      "maximum": 1,
+      "transition": true,
+      "sdk-support": {
+        "basic functionality": {
+          "js": "0.43.0",
+          "android": "6.0.0",
+          "ios": "4.0.0",
+          "macos": "0.7.0"
+        }
+      },
+      "expression": {
+        "interpolated": true,
+        "parameters": [
+          "zoom"
+        ]
+      },
+      "property-type": "data-constant"
+    },
+    "avalanche-shadow-color": {
+      "type": "color",
+      "default": "#000000",
+      "doc": "The shading color of areas that face away from the light source.",
+      "transition": true,
+      "sdk-support": {
+        "basic functionality": {
+          "js": "0.43.0",
+          "android": "6.0.0",
+          "ios": "4.0.0",
+          "macos": "0.7.0"
+        }
+      },
+      "expression": {
+        "interpolated": true,
+        "parameters": [
+          "zoom"
+        ]
+      },
+      "property-type": "data-constant"
+    },
+    "avalanche-highlight-color": {
+      "type": "color",
+      "default": "#FFFFFF",
+      "doc": "The shading color of areas that faces towards the light source.",
+      "transition": true,
+      "sdk-support": {
+        "basic functionality": {
+          "js": "0.43.0",
+          "android": "6.0.0",
+          "ios": "4.0.0",
+          "macos": "0.7.0"
+        }
+      },
+      "expression": {
+        "interpolated": true,
+        "parameters": [
+          "zoom"
+        ]
+      },
+      "property-type": "data-constant"
+    },
+    "avalanche-accent-color": {
       "type": "color",
       "default": "#000000",
       "doc": "The shading color used to accentuate rugged terrain like sharp cliffs and gorges.",

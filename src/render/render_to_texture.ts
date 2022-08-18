@@ -115,7 +115,7 @@ export default class RenderToTexture {
         }
 
         // in case a stack is finished render all collected stack-layers into a texture
-        if (this._renderToTexture[this._prevType] || type === 'hillshade' || (this._renderToTexture[type] && isLastLayer)) {
+        if (this._renderToTexture[this._prevType] || type === 'hillshade' || type === 'avalanche' || (this._renderToTexture[type] && isLastLayer)) {
             this._prevType = type;
             const stack = this._stacks.length - 1, layers = this._stacks[stack] || [];
             for (const tile of this._renderableTiles) {
@@ -135,7 +135,7 @@ export default class RenderToTexture {
 
             // the hillshading layer is a special case because it changes on every camera-movement
             // so rerender it in any case.
-            if (type === 'hillshade') {
+            if (type === 'hillshade' || type === 'avalanche') {
                 this._stacks.push([layerIds[currentLayer]]);
                 for (const tile of this._renderableTiles) {
                     const coords = this._coordsDescendingInv[layer.source][tile.tileID.key];

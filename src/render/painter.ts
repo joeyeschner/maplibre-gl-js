@@ -27,6 +27,7 @@ import line from './draw_line';
 import fill from './draw_fill';
 import fillExtrusion from './draw_fill_extrusion';
 import hillshade from './draw_hillshade';
+import avalanche from './draw_avalanche';
 import raster from './draw_raster';
 import background from './draw_background';
 import debug, {drawDebugPadding} from './draw_debug';
@@ -42,6 +43,7 @@ const draw = {
     fill,
     'fill-extrusion': fillExtrusion,
     hillshade,
+    avalanche,
     raster,
     background,
     debug,

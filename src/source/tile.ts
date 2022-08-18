@@ -79,6 +79,7 @@ class Tile {
     demMatrix: mat4;
     aborted: boolean;
     needsHillshadePrepare: boolean;
+    needsAvalanchePrepare: boolean;
     needsTerrainPrepare: boolean;
     request: Cancelable;
     texture: any;
