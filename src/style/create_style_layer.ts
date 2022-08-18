@@ -1,6 +1,7 @@
 import circle from './style_layer/circle_style_layer';
 import heatmap from './style_layer/heatmap_style_layer';
 import hillshade from './style_layer/hillshade_style_layer';
+import avalanche from './style_layer/avalanche_style_layer';
 import fill from './style_layer/fill_style_layer';
 import fillExtrusion from './style_layer/fill_extrusion_style_layer';
 import line from './style_layer/line_style_layer';
@@ -16,6 +17,7 @@ const subclasses = {
     circle,
     heatmap,
     hillshade,
+    avalanche,
     fill,
     'fill-extrusion': fillExtrusion,
     line,

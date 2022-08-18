@@ -15,7 +15,7 @@ import type Context from '../../gl/context';
 import type {UniformValues, UniformLocations} from '../uniform_binding';
 import type Tile from '../../source/tile';
 import type Painter from '../painter';
-import type HillshadeStyleLayer from '../../style/style_layer/hillshade_style_layer';
+import type AvalancheStyleLayer from '../../style/style_layer/avalanche_style_layer';
 import type DEMData from '../../data/dem_data';
 import type {OverscaledTileID} from '../../source/tile_id';
 
@@ -58,16 +58,16 @@ const avalanchePrepareUniforms = (context: Context, locations: UniformLocations)
 const avalancheUniformValues = (
     painter: Painter,
     tile: Tile,
-    layer: HillshadeStyleLayer,
+    layer: AvalancheStyleLayer,
     coord: OverscaledTileID
 ): UniformValues<AvalancheUniformsType> => {
-    const shadow = layer.paint.get('hillshade-shadow-color');
-    const highlight = layer.paint.get('hillshade-highlight-color');
-    const accent = layer.paint.get('hillshade-accent-color');
+    const shadow = layer.paint.get('avalanche-shadow-color');
+    const highlight = layer.paint.get('avalanche-highlight-color');
+    const accent = layer.paint.get('avalanche-accent-color');
 
-    let azimuthal = layer.paint.get('hillshade-illumination-direction') * (Math.PI / 180);
+    let azimuthal = layer.paint.get('avalanche-illumination-direction') * (Math.PI / 180);
     // modify azimuthal angle by map rotation if light is anchored at the viewport
-    if (layer.paint.get('hillshade-illumination-anchor') === 'viewport') {
+    if (layer.paint.get('avalanche-illumination-anchor') === 'viewport') {
         azimuthal -= painter.transform.angle;
     }
     const align = !painter.options.moving;
@@ -75,7 +75,7 @@ const avalancheUniformValues = (
         'u_matrix': coord ? coord.posMatrix : painter.transform.calculatePosMatrix(tile.tileID.toUnwrapped(), align),
         'u_image': 0,
         'u_latrange': getTileLatRange(painter, tile.tileID),
-        'u_light': [layer.paint.get('hillshade-exaggeration'), azimuthal],
+        'u_light': [layer.paint.get('avalanche-exaggeration'), azimuthal],
         'u_shadow': shadow,
         'u_highlight': highlight,
         'u_accent': accent

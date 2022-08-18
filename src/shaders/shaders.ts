@@ -37,6 +37,10 @@ import hillshadePrepareFrag from './hillshade_prepare.fragment.glsl.g';
 import hillshadePrepareVert from './hillshade_prepare.vertex.glsl.g';
 import hillshadeFrag from './hillshade.fragment.glsl.g';
 import hillshadeVert from './hillshade.vertex.glsl.g';
+import avalanchePrepareFrag from './avalanche_prepare.fragment.glsl.g';
+import avalanchePrepareVert from './avalanche_prepare.vertex.glsl.g';
+import avalancheFrag from './avalanche.fragment.glsl.g';
+import avalancheVert from './avalanche.vertex.glsl.g';
 import lineFrag from './line.fragment.glsl.g';
 import lineVert from './line.vertex.glsl.g';
 import lineGradientFrag from './line_gradient.fragment.glsl.g';
@@ -77,6 +81,8 @@ const shaders = {
     fillExtrusionPattern: compile(fillExtrusionPatternFrag, fillExtrusionPatternVert),
     hillshadePrepare: compile(hillshadePrepareFrag, hillshadePrepareVert),
     hillshade: compile(hillshadeFrag, hillshadeVert),
+    avalanchePrepare: compile(avalanchePrepareFrag, avalanchePrepareVert),
+    avalanche: compile(avalancheFrag, avalancheVert),
     line: compile(lineFrag, lineVert),
     lineGradient: compile(lineGradientFrag, lineGradientVert),
     linePattern: compile(linePatternFrag, linePatternVert),

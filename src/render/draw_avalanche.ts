@@ -9,12 +9,12 @@ import {
 
 import type Painter from './painter';
 import type SourceCache from '../source/source_cache';
-import type HillshadeStyleLayer from '../style/style_layer/hillshade_style_layer';
+import type AvalancheStyleLayer from '../style/style_layer/avalanche_style_layer';
 import type {OverscaledTileID} from '../source/tile_id';
 
 export default drawAvalanche;
 
-function drawAvalanche(painter: Painter, sourceCache: SourceCache, layer: HillshadeStyleLayer, tileIDs: Array<OverscaledTileID>) {
+function drawAvalanche(painter: Painter, sourceCache: SourceCache, layer: AvalancheStyleLayer, tileIDs: Array<OverscaledTileID>) {
     if (painter.renderPass !== 'offscreen' && painter.renderPass !== 'translucent') return;
 
     const context = painter.context;
@@ -27,8 +27,8 @@ function drawAvalanche(painter: Painter, sourceCache: SourceCache, layer: Hillsh
 
     for (const coord of coords) {
         const tile = sourceCache.getTile(coord);
-        if (typeof tile.needsHillshadePrepare !== 'undefined' && tile.needsHillshadePrepare && painter.renderPass === 'offscreen') {
-            prepareHillshade(painter, tile, layer, depthMode, StencilMode.disabled, colorMode);
+        if (typeof tile.needsAvalanchePrepare !== 'undefined' && tile.needsAvalanchePrepare && painter.renderPass === 'offscreen') {
+            prepareAvalanche(painter, tile, layer, depthMode, StencilMode.disabled, colorMode);
         } else if (painter.renderPass === 'translucent') {
             renderAvalanche(painter, coord, tile, layer, depthMode, stencilModes[coord.overscaledZ], colorMode);
         }
@@ -56,9 +56,9 @@ function renderAvalanche(painter, coord, tile, layer, depthMode, stencilMode, co
 
 }
 
-// hillshade rendering is done in two steps. the prepare step first calculates the slope of the terrain in the x and y
+// avalanche risk rendering is done in two steps. the prepare step first calculates the slope of the terrain in the x and y
 // directions for each pixel, and saves those values to a framebuffer texture in the r and g channels.
-function prepareHillshade(painter, tile, layer, depthMode, stencilMode, colorMode) {
+function prepareAvalanche(painter, tile, layer, depthMode, stencilMode, colorMode) {
     const context = painter.context;
     const gl = context.gl;
     const dem = tile.dem;
