@@ -8,6 +8,8 @@ uniform vec2 u_dimension;
 uniform float u_zoom;
 uniform vec4 u_unpack;
 
+#define PI 3.141592653589793
+
 float getElevation(vec2 coord, float bias) {
     // Convert encoded elevation value to meters
     vec4 data = texture2D(u_image, coord) * 255.0;
@@ -61,7 +63,16 @@ void main() {
     vec2 deriv = vec2(
         (c + f + f + i) - (a + d + d + g),
         (g + h + h + i) - (a + b + b + c)
-    ) / pow(2.0, exaggeration + (19.2562 - u_zoom));
+    ) / 8.0 * 40075016.6855785 / (256.0 * pow(2.0, u_zoom));
+
+    float aspect = 180.0/PI * atan(deriv.x, -deriv.y);
+
+    if (aspect < 0.0)
+        aspect = 90.0 - aspect;
+    else if (aspect > 90.0)
+        aspect = 360.0 - aspect + 90.0;
+    else
+        aspect = 90.0 - aspect;
 
     gl_FragColor = clamp(vec4(
         deriv.x / 2.0 + 0.5,
@@ -69,7 +80,18 @@ void main() {
         1.0,
         1.0), 0.0, 1.0);
 
-#ifdef OVERDRAW_INSPECTOR
+    // Aspect colors for debugging
+    if (aspect > 45.0 && aspect <= 135.0)
+        gl_FragColor = vec4(1,1,0,1);
+    else if (aspect > 135.0 && aspect <= 225.0)
+        gl_FragColor = vec4(1,0,1,1);
+    else if (aspect > 225.0 && aspect <= 315.0)
+        gl_FragColor = vec4(0,1,1,1);
+    else
+        gl_FragColor = vec4(1,1,1,1);
+
+
+    #ifdef OVERDRAW_INSPECTOR
     gl_FragColor = vec4(1.0);
 #endif
 }

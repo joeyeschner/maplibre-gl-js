@@ -42,14 +42,20 @@
                         maxzoom: 19
                     },
                     terrainSource: {
-                        type: 'raster-dem',
-                        url: 'https://demotiles.maplibre.org/terrain-tiles/tiles.json',
-                        tileSize: 256
+                        type: "raster-dem",
+                        tiles: ["https://alpinemaps.cg.tuwien.ac.at//tiles/mapbox_terrain_rgb/{z}/{x}/{y}.png"],
+                        tileSize: 256,
+                        maxzoom: 15,
+                        minzoom: 4,
+                        bounds: [8.782379, 46.358770, 17.5, 49.037872]
                     },
                     hillshadeSource: {
-                        type: 'raster-dem',
-                        url: 'https://demotiles.maplibre.org/terrain-tiles/tiles.json',
-                        tileSize: 256
+                        type: "raster-dem",
+                        tiles: ["https://alpinemaps.cg.tuwien.ac.at//tiles/mapbox_terrain_rgb/{z}/{x}/{y}.png"],
+                        tileSize: 256,
+                        maxzoom: 15,
+                        minzoom: 4,
+                        bounds: [8.782379, 46.358770, 17.5, 49.037872]
                     },
                 },
                 layers: [
@@ -59,11 +65,11 @@
                         source: 'osm'
                     },
                     {
-                        id: 'hills',
-                        type: 'hillshade',
+                        id: 'avalanche_hills',
+                        type: 'avalanche',
                         source: 'hillshadeSource',
                         layout: {'visibility': 'visible'},
-                        paint: {'hillshade-shadow-color': '#473B24'}
+                        paint: {'avalanche-shadow-color': '#473B24'}
                     }
                 ],
                 terrain: {
