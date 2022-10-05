@@ -30,7 +30,7 @@ import hillshade from './draw_hillshade';
 import avalanche from './draw_avalanche';
 import raster from './draw_raster';
 import background from './draw_background';
-import debug, {drawDebugPadding} from './draw_debug';
+import debug, {drawDebugPadding, selectDebugSource} from './draw_debug';
 import custom from './draw_custom';
 import {drawDepth, drawCoords} from './draw_terrain';
 import {OverscaledTileID} from '../source/tile_id';
@@ -87,6 +87,7 @@ type PainterOptions = {
 class Painter {
     context: Context;
     transform: Transform;
+    renderToTexture: RenderToTexture;
     _tileTextures: {
         [_: number]: Array<Texture>;
     };
@@ -275,7 +276,7 @@ class Painter {
 
         for (const tileID of tileIDs) {
             const id = this._tileClippingMaskIDs[tileID.key] = this.nextStencilID++;
-            const terrainData = this.style.terrain && this.style.terrain.getTerrainData(tileID);
+            const terrainData = this.style.map.terrain && this.style.map.terrain.getTerrainData(tileID);
 
             program.draw(context, gl.TRIANGLES, DepthMode.disabled,
                 // Tests will always pass, and ref value will be written to stencil buffer.
@@ -380,7 +381,6 @@ class Painter {
 
         const layerIds = this.style._order;
         const sourceCaches = this.style.sourceCaches;
-        const renderToTexture = this.style.terrain && new RenderToTexture(this);
 
         for (const id in sourceCaches) {
             const sourceCache = sourceCaches[id];
@@ -409,18 +409,19 @@ class Painter {
             }
         }
 
-        if (renderToTexture) {
+        if (this.renderToTexture) {
+            this.renderToTexture.prepareForRender(this.style, this.transform.zoom);
             // this is disabled, because render-to-texture is rendering all layers from bottom to top.
             this.opaquePassCutoff = 0;
 
             // update coords/depth-framebuffer on camera movement, or tile reloading
-            const newTiles = this.style.terrain.sourceCache.tilesAfterTime(this.terrainFacilitator.renderTime);
+            const newTiles = this.style.map.terrain.sourceCache.tilesAfterTime(this.terrainFacilitator.renderTime);
             if (this.terrainFacilitator.dirty || !mat4.equals(this.terrainFacilitator.matrix, this.transform.projMatrix) || newTiles.length) {
                 mat4.copy(this.terrainFacilitator.matrix, this.transform.projMatrix);
                 this.terrainFacilitator.renderTime = Date.now();
                 this.terrainFacilitator.dirty = false;
-                drawDepth(this, this.style.terrain);
-                drawCoords(this, this.style.terrain);
+                drawDepth(this, this.style.map.terrain);
+                drawCoords(this, this.style.map.terrain);
             }
         }
 
@@ -452,7 +453,7 @@ class Painter {
 
         // Opaque pass ===============================================
         // Draw opaque layers top-to-bottom first.
-        if (!renderToTexture) {
+        if (!this.renderToTexture) {
             this.renderPass = 'opaque';
 
             for (this.currentLayer = layerIds.length - 1; this.currentLayer >= 0; this.currentLayer--) {
@@ -473,7 +474,7 @@ class Painter {
             const layer = this.style._layers[layerIds[this.currentLayer]];
             const sourceCache = sourceCaches[layer.source];
 
-            if (renderToTexture && renderToTexture.renderLayer(layer)) continue;
+            if (this.renderToTexture && this.renderToTexture.renderLayer(layer)) continue;
 
             // For symbol layers in the translucent pass, we add extra tiles to the renderable set
             // for cross-tile symbol fading. Symbol layers don't use tile clipping, so no need to render
@@ -485,20 +486,7 @@ class Painter {
         }
 
         if (this.options.showTileBoundaries) {
-            //Use source with highest maxzoom
-            let selectedSource;
-            let sourceCache;
-            const layers = Object.values(this.style._layers);
-            layers.forEach((layer) => {
-                if (layer.source && !layer.isHidden(this.transform.zoom)) {
-                    if (layer.source !== (sourceCache && sourceCache.id)) {
-                        sourceCache = this.style.sourceCaches[layer.source];
-                    }
-                    if (!selectedSource || (selectedSource.getSource().maxzoom < sourceCache.getSource().maxzoom)) {
-                        selectedSource = sourceCache;
-                    }
-                }
-            });
+            const selectedSource = selectDebugSource(this.style, this.transform.zoom);
             if (selectedSource) {
                 draw.debug(this, selectedSource, selectedSource.getVisibleCoordinates());
             }
@@ -632,7 +620,7 @@ class Painter {
         const key = name +
             (programConfiguration ? programConfiguration.cacheKey : '') +
             (this._showOverdrawInspector ? '/overdraw' : '') +
-            (this.style.terrain ? '/terrain' : '');
+            (this.style.map.terrain ? '/terrain' : '');
         if (!this.cache[key]) {
             this.cache[key] = new Program(
                 this.context,
@@ -641,7 +629,7 @@ class Painter {
                 programConfiguration,
                 programUniforms[name],
                 this._showOverdrawInspector,
-                this.style.terrain
+                this.style.map.terrain
             );
         }
         return this.cache[key];
