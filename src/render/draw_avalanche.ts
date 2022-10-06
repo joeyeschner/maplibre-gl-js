@@ -11,6 +11,9 @@ import type Painter from './painter';
 import type SourceCache from '../source/source_cache';
 import type AvalancheStyleLayer from '../style/style_layer/avalanche_style_layer';
 import type {OverscaledTileID} from '../source/tile_id';
+import Tile from "../source/tile";
+import HillshadeStyleLayer from "../style/style_layer/hillshade_style_layer";
+import ColorMode from "../gl/color_mode";
 
 export default drawAvalanche;
 
@@ -37,14 +40,21 @@ function drawAvalanche(painter: Painter, sourceCache: SourceCache, layer: Avalan
     context.viewport.set([0, 0, painter.width, painter.height]);
 }
 
-function renderAvalanche(painter, coord, tile, layer, depthMode, stencilMode, colorMode) {
+function renderAvalanche(
+    painter: Painter,
+    coord: OverscaledTileID,
+    tile: Tile,
+    layer: AvalancheStyleLayer,
+    depthMode: Readonly<DepthMode>,
+    stencilMode: Readonly<StencilMode>,
+    colorMode: Readonly<ColorMode>) {
     const context = painter.context;
     const gl = context.gl;
     const fbo = tile.fbo;
     if (!fbo) return;
 
     const program = painter.useProgram('avalanche');
-    const terrainData = painter.style.terrain && painter.style.terrain.getTerrainData(coord);
+    const terrainData = painter.style.map.terrain && painter.style.map.terrain.getTerrainData(coord);
 
     context.activeTexture.set(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, fbo.colorAttachment.get());
@@ -58,7 +68,13 @@ function renderAvalanche(painter, coord, tile, layer, depthMode, stencilMode, co
 
 // avalanche risk rendering is done in two steps. the prepare step first calculates the slope of the terrain in the x and y
 // directions for each pixel, and saves those values to a framebuffer texture in the r and g channels.
-function prepareAvalanche(painter, tile, layer, depthMode, stencilMode, colorMode) {
+function prepareAvalanche(
+    painter: Painter,
+    tile: Tile,
+    layer: AvalancheStyleLayer,
+    depthMode: Readonly<DepthMode>,
+    stencilMode: Readonly<StencilMode>,
+    colorMode: Readonly<ColorMode>) {
     const context = painter.context;
     const gl = context.gl;
     const dem = tile.dem;
