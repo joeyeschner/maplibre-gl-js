@@ -28,10 +28,13 @@ function drawAvalanche(painter: Painter, sourceCache: SourceCache, layer: Avalan
     const [stencilModes, coords] = painter.renderPass === 'translucent' ?
         painter.stencilConfigForOverlap(tileIDs) : [{}, tileIDs];
 
+    // TODO: make configurable
+    const secondaryData = 'basemap';
+
     for (const coord of coords) {
         const tile = sourceCache.getTile(coord);
         if (typeof tile.needsAvalanchePrepare !== 'undefined' && tile.needsAvalanchePrepare && painter.renderPass === 'offscreen') {
-            prepareAvalanche(painter, tile, layer, depthMode, StencilMode.disabled, colorMode);
+            prepareAvalanche(painter, tile, layer, depthMode, StencilMode.disabled, colorMode, secondaryData, coord);
         } else if (painter.renderPass === 'translucent') {
             renderAvalanche(painter, coord, tile, layer, depthMode, stencilModes[coord.overscaledZ], colorMode);
         }
@@ -74,10 +77,13 @@ function prepareAvalanche(
     layer: AvalancheStyleLayer,
     depthMode: Readonly<DepthMode>,
     stencilMode: Readonly<StencilMode>,
-    colorMode: Readonly<ColorMode>) {
+    colorMode: Readonly<ColorMode>,
+    secondaryData: string,
+    coord: OverscaledTileID) {
     const context = painter.context;
     const gl = context.gl;
     const dem = tile.dem;
+
     if (dem && dem.data) {
         const tileSize = dem.dim;
         const textureStride = dem.stride;
@@ -94,6 +100,15 @@ function prepareAvalanche(
         } else {
             tile.demTexture = new Texture(context, pixelData, gl.RGBA, {premultiply: false});
             tile.demTexture.bind(gl.NEAREST, gl.CLAMP_TO_EDGE);
+        }
+
+        if (secondaryData && painter.style.sourceCaches[secondaryData]){
+            const regionTile = painter.style.sourceCaches[secondaryData].getTile(coord);
+            if (regionTile && regionTile.texture) {
+                //console.log(regionTile);
+                context.activeTexture.set(gl.TEXTURE4);
+                regionTile.texture.bind(gl.NEAREST, gl.CLAMP_TO_EDGE);
+            }
         }
 
         context.activeTexture.set(gl.TEXTURE0);
@@ -117,6 +132,6 @@ function prepareAvalanche(
             null, layer.id, painter.rasterBoundsBuffer,
             painter.quadTriangleIndexBuffer, painter.rasterBoundsSegments);
 
-        tile.needsAvalanchePrepare = false;
+        tile.needsAvalanchePrepare = false; 
     }
 }

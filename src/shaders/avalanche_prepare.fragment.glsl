@@ -3,6 +3,7 @@ precision highp float;
 #endif
 
 uniform sampler2D u_image;
+uniform sampler2D u_regions;
 varying vec2 v_pos;
 uniform vec2 u_dimension;
 uniform float u_zoom;
@@ -90,6 +91,7 @@ void main() {
     else
         gl_FragColor = vec4(1,1,1,1);
 
+    gl_FragColor = texture2D(u_regions, v_pos);
 
     #ifdef OVERDRAW_INSPECTOR
     gl_FragColor = vec4(1.0);
