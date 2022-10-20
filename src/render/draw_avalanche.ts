@@ -12,7 +12,6 @@ import type SourceCache from '../source/source_cache';
 import type AvalancheStyleLayer from '../style/style_layer/avalanche_style_layer';
 import type {OverscaledTileID} from '../source/tile_id';
 import Tile from "../source/tile";
-import HillshadeStyleLayer from "../style/style_layer/hillshade_style_layer";
 import ColorMode from "../gl/color_mode";
 
 export default drawAvalanche;
@@ -28,8 +27,8 @@ function drawAvalanche(painter: Painter, sourceCache: SourceCache, layer: Avalan
     const [stencilModes, coords] = painter.renderPass === 'translucent' ?
         painter.stencilConfigForOverlap(tileIDs) : [{}, tileIDs];
 
-    // TODO: make configurable
-    const secondaryData = 'basemap';
+    // Get secondary data property from paint properties
+    const secondaryData = layer.paint.get('avalanche-secondary-data');
 
     for (const coord of coords) {
         const tile = sourceCache.getTile(coord);
@@ -105,10 +104,11 @@ function prepareAvalanche(
         if (secondaryData && painter.style.sourceCaches[secondaryData]){
             const regionTile = painter.style.sourceCaches[secondaryData].getTile(coord);
             if (regionTile && regionTile.texture) {
-                //console.log(regionTile);
                 context.activeTexture.set(gl.TEXTURE4);
                 regionTile.texture.bind(gl.NEAREST, gl.CLAMP_TO_EDGE);
             }
+        } else {
+            throw Error('No valid region data specified for avalanche layer. Make sure there is a visible raster source linked in the \'avalanche-secondary-data\' paint property.')
         }
 
         context.activeTexture.set(gl.TEXTURE0);
@@ -132,6 +132,6 @@ function prepareAvalanche(
             null, layer.id, painter.rasterBoundsBuffer,
             painter.quadTriangleIndexBuffer, painter.rasterBoundsSegments);
 
-        tile.needsAvalanchePrepare = false; 
+        tile.needsAvalanchePrepare = false;
     }
 }

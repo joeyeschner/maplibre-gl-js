@@ -34,10 +34,10 @@
         style: {
             version: 8,
             sources: {
-                basemap: {
+                regions: {
                     type: 'raster',
                     bounds: [8.782379, 46.358770, 17.5, 49.037872],
-                    tiles: ['https://localhost:6666/regions/tiles3/{z}/{x}/{y}.png'],
+                    tiles: ['https://localhost:6666/regions/tiles/{z}/{x}/{y}.png'],
                     tileSize: 256,
                     maxzoom: 13
                 },
@@ -67,9 +67,9 @@
             },
             layers: [
                 {
-                    id: 'basemap',
+                    id: 'regions',
                     type: 'raster',
-                    source: 'basemap'
+                    source: 'regions'
                 },
                 {
                     id: 'osm',
@@ -81,7 +81,7 @@
                     type: 'avalanche',
                     source: 'hillshadeSource',
                     layout: {'visibility': 'visible'},
-                    paint: {'avalanche-shadow-color': '#473B24'}
+                    paint: {'avalanche-secondary-data': 'regions'}
                 }
             ],
             terrain: {
