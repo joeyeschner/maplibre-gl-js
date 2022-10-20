@@ -15,7 +15,7 @@ float getElevation(vec2 coord, float bias) {
     // Convert encoded elevation value to meters
     vec4 data = texture2D(u_image, coord) * 255.0;
     data.a = -1.0;
-    return dot(data, u_unpack) / 4.0;
+    return dot(data, u_unpack);
 }
 
 void main() {
@@ -61,6 +61,14 @@ void main() {
     float exaggerationFactor = u_zoom < 2.0 ? 0.4 : u_zoom < 4.5 ? 0.35 : 0.3;
     float exaggeration = u_zoom < 15.0 ? (u_zoom - 15.0) * exaggerationFactor : 0.0;
 
+    // Test values
+    float dangerBorder = 2200.0;
+    int dangeRatingHi = 3;
+    int dangeRatingLo = 2;
+    float unfavorableStart = 0.0;
+    float unfavorableEnd = 225.0;
+
+
     vec2 deriv = vec2(
         (c + f + f + i) - (a + d + d + g),
         (g + h + h + i) - (a + b + b + c)
@@ -91,7 +99,16 @@ void main() {
     else
         gl_FragColor = vec4(1,1,1,1);
 
-    gl_FragColor = texture2D(u_regions, v_pos);
+    gl_FragColor = vec4(0);
+    vec4 regionPixel = texture2D(u_regions, v_pos);
+    if (regionPixel.r == 5.0/255.0 && regionPixel.g == 17.0/255.0) {
+        if (e > dangerBorder) {
+            gl_FragColor = vec4(1,0,0,1);
+        }
+        else {
+            gl_FragColor = vec4(0.5,0.5,0,1);
+        }
+    }
 
     #ifdef OVERDRAW_INSPECTOR
     gl_FragColor = vec4(1.0);
