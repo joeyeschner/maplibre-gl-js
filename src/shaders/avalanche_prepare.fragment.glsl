@@ -100,13 +100,18 @@ void main() {
         gl_FragColor = vec4(1,1,1,1);
 
     gl_FragColor = vec4(0);
+
+    float dangerBorderWidth = 200.0;
+    vec4 danger2 = vec4(1,1,0,1);
+    vec4 danger3 = vec4(1,0,0,1);
+    float interpolant = (e - (dangerBorder - dangerBorderWidth)) / dangerBorderWidth;
     vec4 regionPixel = texture2D(u_regions, v_pos);
     if (regionPixel.r == 5.0/255.0 && regionPixel.g == 17.0/255.0) {
-        if (e > dangerBorder) {
-            gl_FragColor = vec4(1,0,0,1);
+        if (e > (dangerBorder - dangerBorderWidth)) {
+            gl_FragColor = mix(danger2, danger3, interpolant);
         }
         else {
-            gl_FragColor = vec4(0.5,0.5,0,1);
+            gl_FragColor = vec4(1,1,0,1);
         }
     }
 
