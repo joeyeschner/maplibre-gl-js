@@ -46,7 +46,7 @@ void main() {
     vec4 shade_color = mix(u_shadow, u_highlight, shade) * sin(scaledSlope) * clamp(intensity * 2.0, 0.0, 1.0);
     float halfaspect = ((aspect * 2.0) - 1.0);
     if (pixel.a != 0.0) {
-        gl_FragColor = vec4(pixel.rgb, 0.5);// accent_color * (1.0 - shade_color.a) + shade_color;
+        gl_FragColor = vec4(pixel.rgb, 0.8);// accent_color * (1.0 - shade_color.a) + shade_color;
     }
 
 #ifdef OVERDRAW_INSPECTOR

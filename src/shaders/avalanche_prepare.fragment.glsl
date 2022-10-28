@@ -18,6 +18,32 @@ float getElevation(vec2 coord, float bias) {
     return dot(data, u_unpack);
 }
 
+float modI(float a,float b) {
+    float m=a-floor((a+0.5)/b)*b;
+    return floor(m+0.5);
+}
+
+float clampToCircle(float value) {
+    return modI(value + 540.0, 360.0) + 180.0;
+}
+
+float aspectAmount(float aspect, float begin, float end, float transition) {
+    //begin = clampToCircle(begin);
+    //end = clampToCircle(end);
+    float bufferedBegin = clampToCircle(begin - transition);
+    float bufferedEnd = clampToCircle(end + transition);
+    if (aspect >= begin - transition && aspect <= end + transition) {
+        if (aspect < clampToCircle(begin + (begin - end) / 2.0)) {
+            return clamp((aspect - bufferedBegin) / transition, 1.0, 0.0);
+        } else {
+            return clamp((bufferedEnd + aspect) / transition, 0.0, 1.0);
+        }
+        return 1.0;
+    } else {
+        return 1.0;
+    }
+}
+
 void main() {
     vec2 epsilon = 1.0 / u_dimension;
 
@@ -89,31 +115,18 @@ void main() {
         1.0,
         1.0), 0.0, 1.0);
 
-    // Aspect colors for debugging
-    if (aspect > 45.0 && aspect <= 135.0)
-        gl_FragColor = vec4(1,1,0,1);
-    else if (aspect > 135.0 && aspect <= 225.0)
-        gl_FragColor = vec4(1,0,1,1);
-    else if (aspect > 225.0 && aspect <= 315.0)
-        gl_FragColor = vec4(0,1,1,1);
-    else
-        gl_FragColor = vec4(1,1,1,1);
-
     gl_FragColor = vec4(0);
 
     float dangerBorderWidth = 200.0;
-    vec4 danger2 = vec4(1,1,0,1);
-    vec4 danger3 = vec4(1,0,0,1);
-    float interpolant = (e - (dangerBorder - dangerBorderWidth)) / dangerBorderWidth;
+    vec4 danger2 = vec4(253.0,141.0,60.0,255.0) / 255.0;
+    vec4 danger3 = vec4(166.0,54.0,3.0, 255.0) / 255.0;
+    float interpolant = clamp((e - (dangerBorder - dangerBorderWidth)) / dangerBorderWidth, 0.0, 1.0);
     vec4 regionPixel = texture2D(u_regions, v_pos);
-    if (regionPixel.r == 5.0/255.0 && regionPixel.g == 17.0/255.0) {
-        if (e > (dangerBorder - dangerBorderWidth)) {
-            gl_FragColor = mix(danger2, danger3, interpolant);
-        }
-        else {
-            gl_FragColor = vec4(1,1,0,1);
-        }
-    }
+    //if (regionPixel.r == 5.0/255.0 && regionPixel.g == 17.0/255.0) {
+        gl_FragColor = mix(danger2, danger3, interpolant);
+    //} else if (regionPixel.r == 5.0/255.0 && regionPixel.g == 16.0/255.0) {
+    //    gl_FragColor = mix(danger3, danger2, aspectAmount(aspect, unfavorableStart, unfavorableEnd, 45.0));
+    //}
 
     #ifdef OVERDRAW_INSPECTOR
     gl_FragColor = vec4(1.0);
