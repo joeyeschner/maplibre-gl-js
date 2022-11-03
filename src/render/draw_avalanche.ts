@@ -13,6 +13,7 @@ import type AvalancheStyleLayer from '../style/style_layer/avalanche_style_layer
 import type {OverscaledTileID} from '../source/tile_id';
 import Tile from "../source/tile";
 import ColorMode from "../gl/color_mode";
+import {RGBAImage} from "../util/image";
 
 export default drawAvalanche;
 
@@ -111,6 +112,19 @@ function prepareAvalanche(
             throw Error('No valid region data specified for avalanche layer. Make sure there is a visible raster source linked in the \'avalanche-secondary-data\' paint property.')
         }
 
+        context.activeTexture.set(gl.TEXTURE5);
+
+        var reportData = new Uint8Array([
+            255,0,0,255,
+            0,127,0,255,
+            0,0,255,255,
+        ]);
+
+        const reportImage = new RGBAImage({width: 1, height: 3}, reportData)
+        let reportTexture = new Texture(context, reportImage, gl.RGBA, {premultiply: false});
+
+        reportTexture.bind(gl.NEAREST, gl.CLAMP_TO_EDGE);
+
         context.activeTexture.set(gl.TEXTURE0);
 
         let fbo = tile.fbo;
@@ -134,4 +148,9 @@ function prepareAvalanche(
 
         tile.needsAvalanchePrepare = false;
     }
+}
+
+// TODO: move this elsewhere
+function buildReportTexture() {
+    
 }

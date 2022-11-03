@@ -33,6 +33,7 @@ export type AvalanchePrepareUniformsType = {
     'u_matrix': UniformMatrix4f;
     'u_image': Uniform1i;
     'u_regions': Uniform1i;
+    'u_report': Uniform1i;
     'u_dimension': Uniform2f;
     'u_zoom': Uniform1f;
     'u_unpack': Uniform4f;
@@ -52,6 +53,7 @@ const avalanchePrepareUniforms = (context: Context, locations: UniformLocations)
     'u_matrix': new UniformMatrix4f(context, locations.u_matrix),
     'u_image': new Uniform1i(context, locations.u_image),
     'u_regions': new Uniform1i(context, locations.u_regions),
+    'u_report': new Uniform1i(context, locations.u_report),
     'u_dimension': new Uniform2f(context, locations.u_dimension),
     'u_zoom': new Uniform1f(context, locations.u_zoom),
     'u_unpack': new Uniform4f(context, locations.u_unpack)
@@ -96,6 +98,7 @@ const avalancheUniformPrepareValues = (tileID: OverscaledTileID, dem: DEMData): 
         'u_matrix': matrix,
         'u_image': 1,
         'u_regions': 4,
+        'u_report': 5,
         'u_dimension': [stride, stride],
         'u_zoom': tileID.overscaledZ,
         'u_unpack': dem.getUnpackVector()

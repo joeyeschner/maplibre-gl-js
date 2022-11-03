@@ -4,6 +4,7 @@ precision highp float;
 
 uniform sampler2D u_image;
 uniform sampler2D u_regions;
+uniform sampler2D u_report;
 varying vec2 v_pos;
 uniform vec2 u_dimension;
 uniform float u_zoom;
@@ -127,6 +128,8 @@ void main() {
     //} else if (regionPixel.r == 5.0/255.0 && regionPixel.g == 16.0/255.0) {
     //    gl_FragColor = mix(danger3, danger2, aspectAmount(aspect, unfavorableStart, unfavorableEnd, 45.0));
     //}
+
+    gl_FragColor = texture2D(u_report, vec2(1.0, 0.5));
 
     #ifdef OVERDRAW_INSPECTOR
     gl_FragColor = vec4(1.0);
