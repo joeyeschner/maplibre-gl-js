@@ -13,3 +13,15 @@ export function packUint8ToFloat(a: number, b: number) {
     b = clamp(Math.floor(b), 0, 255);
     return 256 * a + b;
 }
+
+export function packFloatToColor(value: number) {
+    const a = ((value / 256.0) - (Math.floor(value / 256))) * 256
+    const b = ((Math.floor(value / 256) / 256.0) - Math.floor(Math.floor(value / 256) / 256 )) * 256
+    const g = ((Math.floor(Math.floor(value / 256) / 256) / 256.0) - Math.floor(Math.floor(Math.floor(value / 256) / 256 ) / 256)) * 256
+    const r = ((Math.floor(Math.floor(Math.floor(value / 256) / 256) / 256) / 256.0) - Math.floor(Math.floor(Math.floor(Math.floor(value / 256) / 256 ) / 256 ) / 256)) * 256
+    return [r, g, b, a];
+}
+
+export function unpackColorToFloat(value: Array<number>) {
+    return value[0] * 256 * 256 * 256 + value[1] * 256 * 256 + value[2] * 256 + value[3];
+}

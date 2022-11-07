@@ -6,6 +6,7 @@ uniform sampler2D u_image;
 uniform sampler2D u_regions;
 uniform sampler2D u_report;
 varying vec2 v_pos;
+uniform vec2 u_report_dimension;
 uniform vec2 u_dimension;
 uniform float u_zoom;
 uniform vec4 u_unpack;
@@ -43,6 +44,11 @@ float aspectAmount(float aspect, float begin, float end, float transition) {
     } else {
         return 1.0;
     }
+}
+
+float getDangerBorder(float index) {
+    vec4 bitShifts = vec4(256. * 256. * 256., 256. * 256., 256., 1.);
+    return dot((texture2D(u_report, vec2(0.1, index / u_report_dimension.y))) * 255.0 , bitShifts);
 }
 
 void main() {
@@ -118,18 +124,26 @@ void main() {
 
     gl_FragColor = vec4(0);
 
+    // Get values from texture
+    vec4 regionPixel = texture2D(u_regions, v_pos);
+    float index = (regionPixel.b * 255.0) - (34.0);
+
+    dangerBorder = getDangerBorder(index);
+
+
+
     float dangerBorderWidth = 200.0;
     vec4 danger2 = vec4(253.0,141.0,60.0,255.0) / 255.0;
     vec4 danger3 = vec4(166.0,54.0,3.0, 255.0) / 255.0;
     float interpolant = clamp((e - (dangerBorder - dangerBorderWidth)) / dangerBorderWidth, 0.0, 1.0);
-    vec4 regionPixel = texture2D(u_regions, v_pos);
-    //if (regionPixel.r == 5.0/255.0 && regionPixel.g == 17.0/255.0) {
+
+    if (regionPixel.b >= (34.0/255.0) && regionPixel.b < (55.0/255.0)) {
         gl_FragColor = mix(danger2, danger3, interpolant);
     //} else if (regionPixel.r == 5.0/255.0 && regionPixel.g == 16.0/255.0) {
     //    gl_FragColor = mix(danger3, danger2, aspectAmount(aspect, unfavorableStart, unfavorableEnd, 45.0));
-    //}
+    }
 
-    gl_FragColor = texture2D(u_report, vec2(1.0, 0.5));
+    //gl_FragColor = texture2D(u_report, vec2(0.1, index / u_report_dimension.y));
 
     #ifdef OVERDRAW_INSPECTOR
     gl_FragColor = vec4(1.0);

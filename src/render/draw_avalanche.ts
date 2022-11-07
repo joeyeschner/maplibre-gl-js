@@ -14,6 +14,7 @@ import type {OverscaledTileID} from '../source/tile_id';
 import Tile from "../source/tile";
 import ColorMode from "../gl/color_mode";
 import {RGBAImage} from "../util/image";
+import {packFloatToColor, unpackColorToFloat} from "../shaders/encode_attribute";
 
 export default drawAvalanche;
 
@@ -114,14 +115,7 @@ function prepareAvalanche(
 
         context.activeTexture.set(gl.TEXTURE5);
 
-        var reportData = new Uint8Array([
-            255,0,0,255,
-            0,127,0,255,
-            0,0,255,255,
-        ]);
-
-        const reportImage = new RGBAImage({width: 1, height: 3}, reportData)
-        let reportTexture = new Texture(context, reportImage, gl.RGBA, {premultiply: false});
+        let reportTexture = buildReportTexture(painter);
 
         reportTexture.bind(gl.NEAREST, gl.CLAMP_TO_EDGE);
 
@@ -142,7 +136,7 @@ function prepareAvalanche(
 
         painter.useProgram('avalanchePrepare').draw(context, gl.TRIANGLES,
             depthMode, stencilMode, colorMode, CullFaceMode.disabled,
-            avalancheUniformPrepareValues(tile.tileID, dem),
+            avalancheUniformPrepareValues(tile.tileID, dem, reportTexture.size),
             null, layer.id, painter.rasterBoundsBuffer,
             painter.quadTriangleIndexBuffer, painter.rasterBoundsSegments);
 
@@ -151,6 +145,29 @@ function prepareAvalanche(
 }
 
 // TODO: move this elsewhere
-function buildReportTexture() {
-    
+
+function buildReportTexture(painter: Painter) {
+    const context = painter.context;
+    const gl = context.gl;
+    const currentReport = [{"regionCode":"AT-05-01","dangerBorder":0,"dangerRatingHi":1,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T22:00:00.000Z"},{"regionCode":"AT-05-02","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"},{"regionCode":"AT-05-03","dangerBorder":2600,"dangerRatingHi":3,"dangerRatingLo":2,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T22:00:00.000Z"},{"regionCode":"AT-05-04","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"},{"regionCode":"AT-05-05","dangerBorder":2600,"dangerRatingHi":3,"dangerRatingLo":2,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T22:00:00.000Z"},{"regionCode":"AT-05-06","dangerBorder":2600,"dangerRatingHi":3,"dangerRatingLo":2,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T22:00:00.000Z"},{"regionCode":"AT-05-07","dangerBorder":2600,"dangerRatingHi":3,"dangerRatingLo":2,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T22:00:00.000Z"},{"regionCode":"AT-05-08","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"},{"regionCode":"AT-05-09","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"},{"regionCode":"AT-05-10","dangerBorder":2600,"dangerRatingHi":3,"dangerRatingLo":2,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T22:00:00.000Z"},{"regionCode":"AT-05-11","dangerBorder":2600,"dangerRatingHi":3,"dangerRatingLo":2,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T22:00:00.000Z"},{"regionCode":"AT-05-12","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"},{"regionCode":"AT-05-13","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"},{"regionCode":"AT-05-14","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"},{"regionCode":"AT-05-15","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"},{"regionCode":"AT-05-16","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"},{"regionCode":"AT-05-17","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"},{"regionCode":"AT-05-18","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"},{"regionCode":"AT-05-19","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"},{"regionCode":"AT-05-20","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"},{"regionCode":"AT-05-21","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"}]
+    const reportLength = currentReport.length;
+
+    let colorData = [];
+    for (let i = 0; i < reportLength; i++) {
+        const regionReport = currentReport[i];
+        colorData.push(packFloatToColor(regionReport.dangerBorder));
+        colorData.push(packFloatToColor(regionReport.dangerRatingHi));
+        colorData.push(packFloatToColor(regionReport.dangerRatingLo));
+        colorData.push(packFloatToColor(regionReport.unfavorableStart));
+        colorData.push(packFloatToColor(regionReport.unfavorableEnd));
+    }
+    colorData = colorData.flat();
+    let textureData = new Uint8Array(colorData.length);
+    for (let i = 0; i < colorData.length; i++) {
+        textureData[i] = colorData[i];
+    }
+
+    const reportImage = new RGBAImage({width: 5, height: reportLength}, textureData)
+    return  new Texture(context, reportImage, gl.RGBA, {premultiply: false});
 }
+
