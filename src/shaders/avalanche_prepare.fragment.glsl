@@ -13,6 +13,16 @@ uniform vec4 u_unpack;
 
 #define PI 3.141592653589793
 
+vec4 dangerColors[5];
+
+void initDangerColors() {
+    dangerColors[0] = vec4(0,1,0,1);
+    dangerColors[1] = vec4(1,1,0,1);
+    dangerColors[2] = vec4(1,0.5,0,1);
+    dangerColors[3] = vec4(1,0,0,1);
+    dangerColors[4] = vec4(0.5,0,0,1);
+}
+
 float getElevation(vec2 coord, float bias) {
     // Convert encoded elevation value to meters
     vec4 data = texture2D(u_image, coord) * 255.0;
@@ -46,12 +56,43 @@ float aspectAmount(float aspect, float begin, float end, float transition) {
     }
 }
 
-float getDangerBorder(float index) {
+float getPackedTextureValue(float index, float column) {
     vec4 bitShifts = vec4(256. * 256. * 256., 256. * 256., 256., 1.);
-    return dot((texture2D(u_report, vec2(0.1, index / u_report_dimension.y))) * 255.0 , bitShifts);
+    return dot((texture2D(u_report, vec2(column, index / u_report_dimension.y))) * 255.0 , bitShifts);
+}
+
+vec4 ratingToColor(float rating) {
+    if (rating == 1.0) return dangerColors[0];
+    if (rating == 2.0) return dangerColors[1];
+    if (rating == 3.0) return dangerColors[2];
+    if (rating == 4.0) return dangerColors[3];
+    if (rating == 5.0) return dangerColors[4];
+    return dangerColors[0];
+}
+
+float getDangerBorder(float index) {
+    return getPackedTextureValue(index, 0.1);
+}
+
+float getDangerRatingHi(float index) {
+    return getPackedTextureValue(index, 0.3);
+}
+
+float getDangerRatingLo(float index) {
+    return getPackedTextureValue(index, 0.5);
+}
+
+float getUnfavorableStart(float index) {
+    return getPackedTextureValue(index, 0.7);
+}
+
+float getUnfavorableEnd(float index) {
+    return getPackedTextureValue(index, 0.9);
 }
 
 void main() {
+    initDangerColors();
+
     vec2 epsilon = 1.0 / u_dimension;
 
     // queried pixels:
@@ -94,14 +135,18 @@ void main() {
     float exaggerationFactor = u_zoom < 2.0 ? 0.4 : u_zoom < 4.5 ? 0.35 : 0.3;
     float exaggeration = u_zoom < 15.0 ? (u_zoom - 15.0) * exaggerationFactor : 0.0;
 
-    // Test values
-    float dangerBorder = 2200.0;
-    int dangeRatingHi = 3;
-    int dangeRatingLo = 2;
-    float unfavorableStart = 0.0;
-    float unfavorableEnd = 225.0;
+    // Get values from texture
+    vec4 regionPixel = texture2D(u_regions, v_pos);
+    float index = (regionPixel.b * 255.0) - (33.0);
 
+    // Report values
+    float dangerBorder = getDangerBorder(index);
+    float dangerRatingHi = getDangerRatingHi(index);
+    float dangerRatingLo = getDangerRatingLo(index);
+    float unfavorableStart = getUnfavorableStart(index);
+    float unfavorableEnd = getUnfavorableEnd(index);
 
+    /*
     vec2 deriv = vec2(
         (c + f + f + i) - (a + d + d + g),
         (g + h + h + i) - (a + b + b + c)
@@ -123,22 +168,17 @@ void main() {
         1.0), 0.0, 1.0);
 
     gl_FragColor = vec4(0);
-
-    // Get values from texture
-    vec4 regionPixel = texture2D(u_regions, v_pos);
-    float index = (regionPixel.b * 255.0) - (34.0);
-
-    dangerBorder = getDangerBorder(index);
-
-
+    */
 
     float dangerBorderWidth = 200.0;
-    vec4 danger2 = vec4(253.0,141.0,60.0,255.0) / 255.0;
-    vec4 danger3 = vec4(166.0,54.0,3.0, 255.0) / 255.0;
+    vec4 dangerColorHi = ratingToColor(dangerRatingHi);
+    vec4 dangerColorLo = ratingToColor(dangerRatingLo);
+    //vec4 danger2 = vec4(253.0,141.0,60.0,255.0) / 255.0;
+    //vec4 danger3 = vec4(166.0,54.0,3.0, 255.0) / 255.0;
     float interpolant = clamp((e - (dangerBorder - dangerBorderWidth)) / dangerBorderWidth, 0.0, 1.0);
 
     if (regionPixel.b >= (34.0/255.0) && regionPixel.b < (55.0/255.0)) {
-        gl_FragColor = mix(danger2, danger3, interpolant);
+        gl_FragColor = mix(dangerColorLo, dangerColorHi, interpolant);
     //} else if (regionPixel.r == 5.0/255.0 && regionPixel.g == 16.0/255.0) {
     //    gl_FragColor = mix(danger3, danger2, aspectAmount(aspect, unfavorableStart, unfavorableEnd, 45.0));
     }
