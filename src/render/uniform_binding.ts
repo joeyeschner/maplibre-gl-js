@@ -135,6 +135,24 @@ class UniformMatrix4f extends Uniform<mat4> {
     }
 }
 
+class UniformVector4f extends Uniform<Array<vec4>> {
+    constructor(context: Context, location: WebGLUniformLocation) {
+        super(context, location);
+        this.current = [[0,0,0,0]];
+    }
+
+    set(v: Array<vec4>): void {
+        this.current = v;
+        let flatInput = v.flat();
+        let outList = new Float32Array(flatInput.length);
+        for (let i = 0; i < flatInput.length; i++) {
+            outList[i] = flatInput[i] as number;
+        }
+        this.gl.uniform4fv(this.location, outList);
+
+    }
+}
+
 export {
     Uniform,
     Uniform1i,
@@ -143,7 +161,8 @@ export {
     Uniform3f,
     Uniform4f,
     UniformColor,
-    UniformMatrix4f
+    UniformMatrix4f,
+    UniformVector4f
 };
 
 export type UniformBindings = {[_: string]: Uniform<any>};

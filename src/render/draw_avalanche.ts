@@ -29,13 +29,13 @@ function drawAvalanche(painter: Painter, sourceCache: SourceCache, layer: Avalan
     const [stencilModes, coords] = painter.renderPass === 'translucent' ?
         painter.stencilConfigForOverlap(tileIDs) : [{}, tileIDs];
 
-    // Get secondary data property from paint properties
-    const secondaryData = layer.paint.get('avalanche-secondary-data');
+    // Get regions source property from layer
+    const regionsSource = layer.regionsSource;
 
     for (const coord of coords) {
         const tile = sourceCache.getTile(coord);
         if (typeof tile.needsAvalanchePrepare !== 'undefined' && tile.needsAvalanchePrepare && painter.renderPass === 'offscreen') {
-            prepareAvalanche(painter, tile, layer, depthMode, StencilMode.disabled, colorMode, secondaryData, coord);
+            prepareAvalanche(painter, tile, layer, depthMode, StencilMode.disabled, colorMode, regionsSource, coord);
         } else if (painter.renderPass === 'translucent') {
             renderAvalanche(painter, coord, tile, layer, depthMode, stencilModes[coord.overscaledZ], colorMode);
         }
@@ -103,7 +103,7 @@ function prepareAvalanche(
             tile.demTexture.bind(gl.NEAREST, gl.CLAMP_TO_EDGE);
         }
 
-        if (secondaryData && painter.style.sourceCaches[secondaryData]){
+        if (secondaryData && painter.style.sourceCaches[secondaryData]) {
             const regionTile = painter.style.sourceCaches[secondaryData].getTile(coord);
             if (regionTile && regionTile.texture) {
                 context.activeTexture.set(gl.TEXTURE4);
@@ -113,10 +113,9 @@ function prepareAvalanche(
             throw Error('No valid region data specified for avalanche layer. Make sure there is a visible raster source linked in the \'avalanche-secondary-data\' paint property.')
         }
 
+        // Report Texture
         context.activeTexture.set(gl.TEXTURE5);
-
         let reportTexture = buildReportTexture(painter);
-
         reportTexture.bind(gl.NEAREST, gl.CLAMP_TO_EDGE);
 
         context.activeTexture.set(gl.TEXTURE0);
@@ -136,7 +135,7 @@ function prepareAvalanche(
 
         painter.useProgram('avalanchePrepare').draw(context, gl.TRIANGLES,
             depthMode, stencilMode, colorMode, CullFaceMode.disabled,
-            avalancheUniformPrepareValues(tile.tileID, dem, reportTexture.size),
+            avalancheUniformPrepareValues(tile.tileID, dem, reportTexture.size, layer.getRatingColors()),
             null, layer.id, painter.rasterBoundsBuffer,
             painter.quadTriangleIndexBuffer, painter.rasterBoundsSegments);
 
@@ -149,7 +148,196 @@ function prepareAvalanche(
 function buildReportTexture(painter: Painter) {
     const context = painter.context;
     const gl = context.gl;
-    const currentReport = [{"regionCode":"AT-05-01","dangerBorder":0,"dangerRatingHi":1,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T22:00:00.000Z"},{"regionCode":"AT-05-02","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"},{"regionCode":"AT-05-03","dangerBorder":2600,"dangerRatingHi":3,"dangerRatingLo":2,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T22:00:00.000Z"},{"regionCode":"AT-05-04","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"},{"regionCode":"AT-05-05","dangerBorder":2600,"dangerRatingHi":3,"dangerRatingLo":2,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T22:00:00.000Z"},{"regionCode":"AT-05-06","dangerBorder":2600,"dangerRatingHi":3,"dangerRatingLo":2,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T22:00:00.000Z"},{"regionCode":"AT-05-07","dangerBorder":2600,"dangerRatingHi":3,"dangerRatingLo":2,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T22:00:00.000Z"},{"regionCode":"AT-05-08","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"},{"regionCode":"AT-05-09","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"},{"regionCode":"AT-05-10","dangerBorder":2600,"dangerRatingHi":3,"dangerRatingLo":2,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T22:00:00.000Z"},{"regionCode":"AT-05-11","dangerBorder":2600,"dangerRatingHi":3,"dangerRatingLo":2,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T22:00:00.000Z"},{"regionCode":"AT-05-12","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"},{"regionCode":"AT-05-13","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"},{"regionCode":"AT-05-14","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"},{"regionCode":"AT-05-15","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"},{"regionCode":"AT-05-16","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"},{"regionCode":"AT-05-17","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"},{"regionCode":"AT-05-18","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"},{"regionCode":"AT-05-19","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"},{"regionCode":"AT-05-20","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"},{"regionCode":"AT-05-21","dangerBorder":2000,"dangerRatingHi":2,"dangerRatingLo":1,"unfavorableStart":0,"unfavorableEnd":0,"startTime":"2022-04-10T22:00:00.000Z","endTime":"2022-04-11T10:00:00.000Z"}]
+    const currentReport = [{
+        "regionCode": "AT-05-01",
+        "dangerBorder": 0,
+        "dangerRatingHi": 1,
+        "dangerRatingLo": 1,
+        "unfavorableStart": 0,
+        "unfavorableEnd": 0,
+        "startTime": "2022-04-10T22:00:00.000Z",
+        "endTime": "2022-04-11T22:00:00.000Z"
+    }, {
+        "regionCode": "AT-05-02",
+        "dangerBorder": 2000,
+        "dangerRatingHi": 2,
+        "dangerRatingLo": 1,
+        "unfavorableStart": 0,
+        "unfavorableEnd": 0,
+        "startTime": "2022-04-10T22:00:00.000Z",
+        "endTime": "2022-04-11T10:00:00.000Z"
+    }, {
+        "regionCode": "AT-05-03",
+        "dangerBorder": 2600,
+        "dangerRatingHi": 3,
+        "dangerRatingLo": 2,
+        "unfavorableStart": 0,
+        "unfavorableEnd": 0,
+        "startTime": "2022-04-10T22:00:00.000Z",
+        "endTime": "2022-04-11T22:00:00.000Z"
+    }, {
+        "regionCode": "AT-05-04",
+        "dangerBorder": 2000,
+        "dangerRatingHi": 2,
+        "dangerRatingLo": 1,
+        "unfavorableStart": 0,
+        "unfavorableEnd": 0,
+        "startTime": "2022-04-10T22:00:00.000Z",
+        "endTime": "2022-04-11T10:00:00.000Z"
+    }, {
+        "regionCode": "AT-05-05",
+        "dangerBorder": 2600,
+        "dangerRatingHi": 3,
+        "dangerRatingLo": 2,
+        "unfavorableStart": 0,
+        "unfavorableEnd": 0,
+        "startTime": "2022-04-10T22:00:00.000Z",
+        "endTime": "2022-04-11T22:00:00.000Z"
+    }, {
+        "regionCode": "AT-05-06",
+        "dangerBorder": 2600,
+        "dangerRatingHi": 3,
+        "dangerRatingLo": 2,
+        "unfavorableStart": 0,
+        "unfavorableEnd": 0,
+        "startTime": "2022-04-10T22:00:00.000Z",
+        "endTime": "2022-04-11T22:00:00.000Z"
+    }, {
+        "regionCode": "AT-05-07",
+        "dangerBorder": 2600,
+        "dangerRatingHi": 3,
+        "dangerRatingLo": 2,
+        "unfavorableStart": 0,
+        "unfavorableEnd": 0,
+        "startTime": "2022-04-10T22:00:00.000Z",
+        "endTime": "2022-04-11T22:00:00.000Z"
+    }, {
+        "regionCode": "AT-05-08",
+        "dangerBorder": 2000,
+        "dangerRatingHi": 2,
+        "dangerRatingLo": 1,
+        "unfavorableStart": 0,
+        "unfavorableEnd": 0,
+        "startTime": "2022-04-10T22:00:00.000Z",
+        "endTime": "2022-04-11T10:00:00.000Z"
+    }, {
+        "regionCode": "AT-05-09",
+        "dangerBorder": 2000,
+        "dangerRatingHi": 2,
+        "dangerRatingLo": 1,
+        "unfavorableStart": 0,
+        "unfavorableEnd": 0,
+        "startTime": "2022-04-10T22:00:00.000Z",
+        "endTime": "2022-04-11T10:00:00.000Z"
+    }, {
+        "regionCode": "AT-05-10",
+        "dangerBorder": 2600,
+        "dangerRatingHi": 3,
+        "dangerRatingLo": 2,
+        "unfavorableStart": 0,
+        "unfavorableEnd": 0,
+        "startTime": "2022-04-10T22:00:00.000Z",
+        "endTime": "2022-04-11T22:00:00.000Z"
+    }, {
+        "regionCode": "AT-05-11",
+        "dangerBorder": 2600,
+        "dangerRatingHi": 3,
+        "dangerRatingLo": 2,
+        "unfavorableStart": 0,
+        "unfavorableEnd": 0,
+        "startTime": "2022-04-10T22:00:00.000Z",
+        "endTime": "2022-04-11T22:00:00.000Z"
+    }, {
+        "regionCode": "AT-05-12",
+        "dangerBorder": 2000,
+        "dangerRatingHi": 2,
+        "dangerRatingLo": 1,
+        "unfavorableStart": 0,
+        "unfavorableEnd": 0,
+        "startTime": "2022-04-10T22:00:00.000Z",
+        "endTime": "2022-04-11T10:00:00.000Z"
+    }, {
+        "regionCode": "AT-05-13",
+        "dangerBorder": 2000,
+        "dangerRatingHi": 2,
+        "dangerRatingLo": 1,
+        "unfavorableStart": 0,
+        "unfavorableEnd": 0,
+        "startTime": "2022-04-10T22:00:00.000Z",
+        "endTime": "2022-04-11T10:00:00.000Z"
+    }, {
+        "regionCode": "AT-05-14",
+        "dangerBorder": 2000,
+        "dangerRatingHi": 2,
+        "dangerRatingLo": 1,
+        "unfavorableStart": 0,
+        "unfavorableEnd": 0,
+        "startTime": "2022-04-10T22:00:00.000Z",
+        "endTime": "2022-04-11T10:00:00.000Z"
+    }, {
+        "regionCode": "AT-05-15",
+        "dangerBorder": 2000,
+        "dangerRatingHi": 2,
+        "dangerRatingLo": 1,
+        "unfavorableStart": 0,
+        "unfavorableEnd": 0,
+        "startTime": "2022-04-10T22:00:00.000Z",
+        "endTime": "2022-04-11T10:00:00.000Z"
+    }, {
+        "regionCode": "AT-05-16",
+        "dangerBorder": 2000,
+        "dangerRatingHi": 2,
+        "dangerRatingLo": 1,
+        "unfavorableStart": 0,
+        "unfavorableEnd": 0,
+        "startTime": "2022-04-10T22:00:00.000Z",
+        "endTime": "2022-04-11T10:00:00.000Z"
+    }, {
+        "regionCode": "AT-05-17",
+        "dangerBorder": 2000,
+        "dangerRatingHi": 2,
+        "dangerRatingLo": 1,
+        "unfavorableStart": 0,
+        "unfavorableEnd": 0,
+        "startTime": "2022-04-10T22:00:00.000Z",
+        "endTime": "2022-04-11T10:00:00.000Z"
+    }, {
+        "regionCode": "AT-05-18",
+        "dangerBorder": 2000,
+        "dangerRatingHi": 2,
+        "dangerRatingLo": 1,
+        "unfavorableStart": 0,
+        "unfavorableEnd": 0,
+        "startTime": "2022-04-10T22:00:00.000Z",
+        "endTime": "2022-04-11T10:00:00.000Z"
+    }, {
+        "regionCode": "AT-05-19",
+        "dangerBorder": 2000,
+        "dangerRatingHi": 2,
+        "dangerRatingLo": 1,
+        "unfavorableStart": 0,
+        "unfavorableEnd": 0,
+        "startTime": "2022-04-10T22:00:00.000Z",
+        "endTime": "2022-04-11T10:00:00.000Z"
+    }, {
+        "regionCode": "AT-05-20",
+        "dangerBorder": 2000,
+        "dangerRatingHi": 2,
+        "dangerRatingLo": 1,
+        "unfavorableStart": 0,
+        "unfavorableEnd": 0,
+        "startTime": "2022-04-10T22:00:00.000Z",
+        "endTime": "2022-04-11T10:00:00.000Z"
+    }, {
+        "regionCode": "AT-05-21",
+        "dangerBorder": 2000,
+        "dangerRatingHi": 2,
+        "dangerRatingLo": 1,
+        "unfavorableStart": 0,
+        "unfavorableEnd": 0,
+        "startTime": "2022-04-10T22:00:00.000Z",
+        "endTime": "2022-04-11T10:00:00.000Z"
+    }]
     const reportLength = currentReport.length;
 
     let colorData = [];
@@ -168,6 +356,6 @@ function buildReportTexture(painter: Painter) {
     }
 
     const reportImage = new RGBAImage({width: 5, height: reportLength}, textureData)
-    return  new Texture(context, reportImage, gl.RGBA, {premultiply: false});
+    return new Texture(context, reportImage, gl.RGBA, {premultiply: false});
 }
 

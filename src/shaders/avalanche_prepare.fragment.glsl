@@ -5,6 +5,7 @@ precision highp float;
 uniform sampler2D u_image;
 uniform sampler2D u_regions;
 uniform sampler2D u_report;
+uniform vec4 u_ratings[5];
 varying vec2 v_pos;
 uniform vec2 u_report_dimension;
 uniform vec2 u_dimension;
@@ -56,38 +57,41 @@ float aspectAmount(float aspect, float begin, float end, float transition) {
     }
 }
 
-float getPackedTextureValue(float index, float column) {
+float getPackedTextureValue(float index, int column) {
+    float xOffset = float(column) * (1.0 / u_report_dimension.x) + ((1.0 / u_report_dimension.x) / 2.0);
     vec4 bitShifts = vec4(256. * 256. * 256., 256. * 256., 256., 1.);
-    return dot((texture2D(u_report, vec2(column, index / u_report_dimension.y))) * 255.0 , bitShifts);
+    return dot((texture2D(u_report, vec2(xOffset, index / u_report_dimension.y))) * 255.0 , bitShifts);
 }
 
 vec4 ratingToColor(float rating) {
+    //return texture2D(u_ratings, vec2(0.5, 0.5));
     if (rating == 1.0) return dangerColors[0];
     if (rating == 2.0) return dangerColors[1];
     if (rating == 3.0) return dangerColors[2];
     if (rating == 4.0) return dangerColors[3];
     if (rating == 5.0) return dangerColors[4];
     return dangerColors[0];
+
 }
 
 float getDangerBorder(float index) {
-    return getPackedTextureValue(index, 0.1);
+    return getPackedTextureValue(index, 0);
 }
 
 float getDangerRatingHi(float index) {
-    return getPackedTextureValue(index, 0.3);
+    return getPackedTextureValue(index, 1);
 }
 
 float getDangerRatingLo(float index) {
-    return getPackedTextureValue(index, 0.5);
+    return getPackedTextureValue(index, 2);
 }
 
 float getUnfavorableStart(float index) {
-    return getPackedTextureValue(index, 0.7);
+    return getPackedTextureValue(index, 3);
 }
 
 float getUnfavorableEnd(float index) {
-    return getPackedTextureValue(index, 0.9);
+    return getPackedTextureValue(index, 4);
 }
 
 void main() {
@@ -183,7 +187,19 @@ void main() {
     //    gl_FragColor = mix(danger3, danger2, aspectAmount(aspect, unfavorableStart, unfavorableEnd, 45.0));
     }
 
-    //gl_FragColor = texture2D(u_report, vec2(0.1, index / u_report_dimension.y));
+
+    if (e < 1000.0) {
+        gl_FragColor = u_ratings[0];
+    } else if (e < 1500.0) {
+        gl_FragColor = u_ratings[1];
+    } else if (e < 1700.0) {
+        gl_FragColor = u_ratings[2];
+    } else if (e < 2000.0) {
+        gl_FragColor = u_ratings[3];
+    } else {
+        gl_FragColor = u_ratings[4];
+    }
+
 
     #ifdef OVERDRAW_INSPECTOR
     gl_FragColor = vec4(1.0);

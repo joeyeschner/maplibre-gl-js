@@ -2563,6 +2563,19 @@
         }
       },
       "property-type": "constant"
+    },
+    "avalanche-regions-data": {
+      "type": "string",
+      "doc": "Name of additional regions raster source to be bound to avalanche shader.",
+      "sdk-support": {
+        "basic functionality": {
+          "js": "0.43.0",
+          "android": "6.0.0",
+          "ios": "4.0.0",
+          "macos": "0.7.0"
+        }
+      },
+      "property-type": "constant"
     }
   },
   "filter": {
@@ -6073,9 +6086,18 @@
       },
       "property-type": "data-constant"
     },
-    "avalanche-secondary-data": {
-      "type": "string",
-      "doc": "Name of additional raster source to be bound to avalanche shader.",
+    "avalanche-rating-color": {
+      "type": "array",
+      "value": "color",
+      "length": 5,
+      "default": [
+        "#00ff00",
+        "#ffff00",
+        "#ff8800",
+        "#ff0000",
+        "#880000"
+      ],
+      "doc": "Color map to define shading of avalanche danger.",
       "sdk-support": {
         "basic functionality": {
           "js": "0.43.0",

@@ -81,8 +81,10 @@
                     id: 'avalanche_hills',
                     type: 'avalanche',
                     source: 'hillshadeSource',
-                    layout: {'visibility': 'visible'},
-                    paint: {'avalanche-secondary-data': 'regions'}
+                    layout: {
+                        'visibility': 'visible',
+                        'avalanche-regions-data': 'regions'
+                    }
                 }
             ],
             terrain: {

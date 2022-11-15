@@ -6,7 +6,8 @@ import {
     Uniform2f,
     UniformColor,
     UniformMatrix4f,
-    Uniform4f
+    Uniform4f,
+    UniformVector4f
 } from '../uniform_binding';
 import EXTENT from '../../data/extent';
 import MercatorCoordinate from '../../geo/mercator_coordinate';
@@ -18,6 +19,7 @@ import type Painter from '../painter';
 import type AvalancheStyleLayer from '../../style/style_layer/avalanche_style_layer';
 import type DEMData from '../../data/dem_data';
 import type {OverscaledTileID} from '../../source/tile_id';
+import Color from "../../style-spec/util/color";
 
 export type AvalancheUniformsType = {
     'u_matrix': UniformMatrix4f;
@@ -35,6 +37,7 @@ export type AvalanchePrepareUniformsType = {
     'u_regions': Uniform1i;
     'u_report': Uniform1i;
     'u_report_dimension': Uniform2f;
+    'u_ratings': UniformVector4f;
     'u_dimension': Uniform2f;
     'u_zoom': Uniform1f;
     'u_unpack': Uniform4f;
@@ -56,6 +59,7 @@ const avalanchePrepareUniforms = (context: Context, locations: UniformLocations)
     'u_regions': new Uniform1i(context, locations.u_regions),
     'u_report': new Uniform1i(context, locations.u_report),
     'u_report_dimension': new Uniform2f(context, locations.u_report_dimension),
+    'u_ratings': new UniformVector4f(context, locations.u_ratings),
     'u_dimension': new Uniform2f(context, locations.u_dimension),
     'u_zoom': new Uniform1f(context, locations.u_zoom),
     'u_unpack': new Uniform4f(context, locations.u_unpack)
@@ -88,7 +92,7 @@ const avalancheUniformValues = (
     };
 };
 
-const avalancheUniformPrepareValues = (tileID: OverscaledTileID, dem: DEMData, reportSize: [number, number]): UniformValues<AvalanchePrepareUniformsType> => {
+const avalancheUniformPrepareValues = (tileID: OverscaledTileID, dem: DEMData, reportSize: [number, number], ratingColors: Array<Array<number>>): UniformValues<AvalanchePrepareUniformsType> => {
 
     const stride = dem.stride;
     const matrix = mat4.create();
@@ -102,6 +106,7 @@ const avalancheUniformPrepareValues = (tileID: OverscaledTileID, dem: DEMData, r
         'u_regions': 4,
         'u_report': 5,
         'u_report_dimension': reportSize,
+        'u_ratings': ratingColors,
         'u_dimension': [stride, stride],
         'u_zoom': tileID.overscaledZ,
         'u_unpack': dem.getUnpackVector()
