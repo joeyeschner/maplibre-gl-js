@@ -148,196 +148,1208 @@ function prepareAvalanche(
 function buildReportTexture(painter: Painter) {
     const context = painter.context;
     const gl = context.gl;
-    const currentReport = [{
-        "regionCode": "AT-05-01",
-        "dangerBorder": 0,
-        "dangerRatingHi": 1,
-        "dangerRatingLo": 1,
-        "unfavorableStart": 0,
-        "unfavorableEnd": 0,
-        "startTime": "2022-04-10T22:00:00.000Z",
-        "endTime": "2022-04-11T22:00:00.000Z"
-    }, {
-        "regionCode": "AT-05-02",
-        "dangerBorder": 2000,
-        "dangerRatingHi": 2,
-        "dangerRatingLo": 1,
-        "unfavorableStart": 0,
-        "unfavorableEnd": 0,
-        "startTime": "2022-04-10T22:00:00.000Z",
-        "endTime": "2022-04-11T10:00:00.000Z"
-    }, {
-        "regionCode": "AT-05-03",
-        "dangerBorder": 2600,
-        "dangerRatingHi": 3,
-        "dangerRatingLo": 2,
-        "unfavorableStart": 0,
-        "unfavorableEnd": 0,
-        "startTime": "2022-04-10T22:00:00.000Z",
-        "endTime": "2022-04-11T22:00:00.000Z"
-    }, {
-        "regionCode": "AT-05-04",
-        "dangerBorder": 2000,
-        "dangerRatingHi": 2,
-        "dangerRatingLo": 1,
-        "unfavorableStart": 0,
-        "unfavorableEnd": 0,
-        "startTime": "2022-04-10T22:00:00.000Z",
-        "endTime": "2022-04-11T10:00:00.000Z"
-    }, {
-        "regionCode": "AT-05-05",
-        "dangerBorder": 2600,
-        "dangerRatingHi": 3,
-        "dangerRatingLo": 2,
-        "unfavorableStart": 0,
-        "unfavorableEnd": 0,
-        "startTime": "2022-04-10T22:00:00.000Z",
-        "endTime": "2022-04-11T22:00:00.000Z"
-    }, {
-        "regionCode": "AT-05-06",
-        "dangerBorder": 2600,
-        "dangerRatingHi": 3,
-        "dangerRatingLo": 2,
-        "unfavorableStart": 0,
-        "unfavorableEnd": 0,
-        "startTime": "2022-04-10T22:00:00.000Z",
-        "endTime": "2022-04-11T22:00:00.000Z"
-    }, {
-        "regionCode": "AT-05-07",
-        "dangerBorder": 2600,
-        "dangerRatingHi": 3,
-        "dangerRatingLo": 2,
-        "unfavorableStart": 0,
-        "unfavorableEnd": 0,
-        "startTime": "2022-04-10T22:00:00.000Z",
-        "endTime": "2022-04-11T22:00:00.000Z"
-    }, {
-        "regionCode": "AT-05-08",
-        "dangerBorder": 2000,
-        "dangerRatingHi": 2,
-        "dangerRatingLo": 1,
-        "unfavorableStart": 0,
-        "unfavorableEnd": 0,
-        "startTime": "2022-04-10T22:00:00.000Z",
-        "endTime": "2022-04-11T10:00:00.000Z"
-    }, {
-        "regionCode": "AT-05-09",
-        "dangerBorder": 2000,
-        "dangerRatingHi": 2,
-        "dangerRatingLo": 1,
-        "unfavorableStart": 0,
-        "unfavorableEnd": 0,
-        "startTime": "2022-04-10T22:00:00.000Z",
-        "endTime": "2022-04-11T10:00:00.000Z"
-    }, {
-        "regionCode": "AT-05-10",
-        "dangerBorder": 2600,
-        "dangerRatingHi": 3,
-        "dangerRatingLo": 2,
-        "unfavorableStart": 0,
-        "unfavorableEnd": 0,
-        "startTime": "2022-04-10T22:00:00.000Z",
-        "endTime": "2022-04-11T22:00:00.000Z"
-    }, {
-        "regionCode": "AT-05-11",
-        "dangerBorder": 2600,
-        "dangerRatingHi": 3,
-        "dangerRatingLo": 2,
-        "unfavorableStart": 0,
-        "unfavorableEnd": 0,
-        "startTime": "2022-04-10T22:00:00.000Z",
-        "endTime": "2022-04-11T22:00:00.000Z"
-    }, {
-        "regionCode": "AT-05-12",
-        "dangerBorder": 2000,
-        "dangerRatingHi": 2,
-        "dangerRatingLo": 1,
-        "unfavorableStart": 0,
-        "unfavorableEnd": 0,
-        "startTime": "2022-04-10T22:00:00.000Z",
-        "endTime": "2022-04-11T10:00:00.000Z"
-    }, {
-        "regionCode": "AT-05-13",
-        "dangerBorder": 2000,
-        "dangerRatingHi": 2,
-        "dangerRatingLo": 1,
-        "unfavorableStart": 0,
-        "unfavorableEnd": 0,
-        "startTime": "2022-04-10T22:00:00.000Z",
-        "endTime": "2022-04-11T10:00:00.000Z"
-    }, {
-        "regionCode": "AT-05-14",
-        "dangerBorder": 2000,
-        "dangerRatingHi": 2,
-        "dangerRatingLo": 1,
-        "unfavorableStart": 0,
-        "unfavorableEnd": 0,
-        "startTime": "2022-04-10T22:00:00.000Z",
-        "endTime": "2022-04-11T10:00:00.000Z"
-    }, {
-        "regionCode": "AT-05-15",
-        "dangerBorder": 2000,
-        "dangerRatingHi": 2,
-        "dangerRatingLo": 1,
-        "unfavorableStart": 0,
-        "unfavorableEnd": 0,
-        "startTime": "2022-04-10T22:00:00.000Z",
-        "endTime": "2022-04-11T10:00:00.000Z"
-    }, {
-        "regionCode": "AT-05-16",
-        "dangerBorder": 2000,
-        "dangerRatingHi": 2,
-        "dangerRatingLo": 1,
-        "unfavorableStart": 0,
-        "unfavorableEnd": 0,
-        "startTime": "2022-04-10T22:00:00.000Z",
-        "endTime": "2022-04-11T10:00:00.000Z"
-    }, {
-        "regionCode": "AT-05-17",
-        "dangerBorder": 2000,
-        "dangerRatingHi": 2,
-        "dangerRatingLo": 1,
-        "unfavorableStart": 0,
-        "unfavorableEnd": 0,
-        "startTime": "2022-04-10T22:00:00.000Z",
-        "endTime": "2022-04-11T10:00:00.000Z"
-    }, {
-        "regionCode": "AT-05-18",
-        "dangerBorder": 2000,
-        "dangerRatingHi": 2,
-        "dangerRatingLo": 1,
-        "unfavorableStart": 0,
-        "unfavorableEnd": 0,
-        "startTime": "2022-04-10T22:00:00.000Z",
-        "endTime": "2022-04-11T10:00:00.000Z"
-    }, {
-        "regionCode": "AT-05-19",
-        "dangerBorder": 2000,
-        "dangerRatingHi": 2,
-        "dangerRatingLo": 1,
-        "unfavorableStart": 0,
-        "unfavorableEnd": 0,
-        "startTime": "2022-04-10T22:00:00.000Z",
-        "endTime": "2022-04-11T10:00:00.000Z"
-    }, {
-        "regionCode": "AT-05-20",
-        "dangerBorder": 2000,
-        "dangerRatingHi": 2,
-        "dangerRatingLo": 1,
-        "unfavorableStart": 0,
-        "unfavorableEnd": 0,
-        "startTime": "2022-04-10T22:00:00.000Z",
-        "endTime": "2022-04-11T10:00:00.000Z"
-    }, {
-        "regionCode": "AT-05-21",
-        "dangerBorder": 2000,
-        "dangerRatingHi": 2,
-        "dangerRatingLo": 1,
-        "unfavorableStart": 0,
-        "unfavorableEnd": 0,
-        "startTime": "2022-04-10T22:00:00.000Z",
-        "endTime": "2022-04-11T10:00:00.000Z"
-    }]
+    const currentReport = [
+        {
+            "regionCode": "AT-02-01",
+            "dangerBorder": 1800,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-02-02",
+            "dangerBorder": 1800,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-02-03",
+            "dangerBorder": 1800,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-02-04",
+            "dangerBorder": 0,
+            "dangerRatingHi": 1,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-02-05",
+            "dangerBorder": 0,
+            "dangerRatingHi": 1,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-02-06",
+            "dangerBorder": 0,
+            "dangerRatingHi": 1,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-02-07",
+            "dangerBorder": 0,
+            "dangerRatingHi": 1,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-02-08",
+            "dangerBorder": 0,
+            "dangerRatingHi": 1,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-02-09",
+            "dangerBorder": 1800,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-02-10",
+            "dangerBorder": 2000,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-02-11",
+            "dangerBorder": 2000,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-02-12",
+            "dangerBorder": 2000,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-02-13",
+            "dangerBorder": 0,
+            "dangerRatingHi": 1,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-02-14",
+            "dangerBorder": 2000,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-02-15",
+            "dangerBorder": 2000,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-02-16",
+            "dangerBorder": 2000,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-02-17",
+            "dangerBorder": 2000,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-02-18",
+            "dangerBorder": 2000,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-02-19",
+            "dangerBorder": 2000,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-03-01",
+            "dangerBorder": 0,
+            "dangerRatingHi": 1,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-03-02",
+            "dangerBorder": 0,
+            "dangerRatingHi": 1,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-03-03",
+            "dangerBorder": 0,
+            "dangerRatingHi": 0,
+            "dangerRatingLo": 0,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-11-15T15:56:34.224Z",
+            "endTime": "2022-11-15T15:56:34.224Z"
+        },
+        {
+            "regionCode": "AT-03-04",
+            "dangerBorder": 0,
+            "dangerRatingHi": 1,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-03-05",
+            "dangerBorder": 0,
+            "dangerRatingHi": 0,
+            "dangerRatingLo": 0,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-11-15T15:56:34.228Z",
+            "endTime": "2022-11-15T15:56:34.228Z"
+        },
+        {
+            "regionCode": "AT-03-06",
+            "dangerBorder": 0,
+            "dangerRatingHi": 1,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-04-01",
+            "dangerBorder": 1800,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-04-02",
+            "dangerBorder": 1800,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-04-03",
+            "dangerBorder": 1800,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-04-04",
+            "dangerBorder": 1800,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-04-05",
+            "dangerBorder": 1800,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-04-06",
+            "dangerBorder": 1800,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-04-07",
+            "dangerBorder": 1800,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-04-08",
+            "dangerBorder": 1800,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-04-09",
+            "dangerBorder": 1800,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-05-01",
+            "dangerBorder": 0,
+            "dangerRatingHi": 1,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-05-02",
+            "dangerBorder": 2000,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-05-03",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 3,
+            "dangerRatingLo": 2,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-05-04",
+            "dangerBorder": 2000,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-05-05",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 3,
+            "dangerRatingLo": 2,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-05-06",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 3,
+            "dangerRatingLo": 2,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-05-07",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 3,
+            "dangerRatingLo": 2,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-05-08",
+            "dangerBorder": 2000,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-05-09",
+            "dangerBorder": 2000,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-05-10",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 3,
+            "dangerRatingLo": 2,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-05-11",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 3,
+            "dangerRatingLo": 2,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-05-12",
+            "dangerBorder": 2000,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-05-13",
+            "dangerBorder": 2000,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-05-14",
+            "dangerBorder": 2000,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-05-15",
+            "dangerBorder": 2000,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-05-16",
+            "dangerBorder": 2000,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-05-17",
+            "dangerBorder": 2000,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-05-18",
+            "dangerBorder": 2000,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-05-19",
+            "dangerBorder": 2000,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-05-20",
+            "dangerBorder": 2000,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-05-21",
+            "dangerBorder": 2000,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-06-01",
+            "dangerBorder": null,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-06-02",
+            "dangerBorder": null,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-06-03",
+            "dangerBorder": null,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-06-04-01",
+            "dangerBorder": null,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-06-04-02",
+            "dangerBorder": null,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-06-05",
+            "dangerBorder": null,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-06-06",
+            "dangerBorder": null,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-06-07",
+            "dangerBorder": null,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-06-08",
+            "dangerBorder": null,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-06-09",
+            "dangerBorder": null,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-06-10",
+            "dangerBorder": null,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-06-11",
+            "dangerBorder": null,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-06-12",
+            "dangerBorder": 0,
+            "dangerRatingHi": 1,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-06-13",
+            "dangerBorder": 0,
+            "dangerRatingHi": 1,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-06-14",
+            "dangerBorder": 0,
+            "dangerRatingHi": 1,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-06-15",
+            "dangerBorder": 0,
+            "dangerRatingHi": 1,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-06-16",
+            "dangerBorder": 0,
+            "dangerRatingHi": 1,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T22:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-06-17",
+            "dangerBorder": null,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-06-18",
+            "dangerBorder": null,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-11T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-01",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-02-01",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-02-02",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-03",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-04-01",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-04-02",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-05",
+            "dangerBorder": 2400,
+            "dangerRatingHi": 1,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-06",
+            "dangerBorder": 2400,
+            "dangerRatingHi": 1,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-07",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-08",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-09",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-10",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-11",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-12",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-13",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-14-01",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-14-02",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-14-03",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-14-04",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-14-05",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-15",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-16",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-17-01",
+            "dangerBorder": 2400,
+            "dangerRatingHi": 1,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-17-02",
+            "dangerBorder": 2400,
+            "dangerRatingHi": 1,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-18",
+            "dangerBorder": 2400,
+            "dangerRatingHi": 1,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-19",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-20",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-21",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-22",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-23",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-24",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-24",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-25",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-25",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-26",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-27",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 1,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-28",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 1,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-07-29",
+            "dangerBorder": 2600,
+            "dangerRatingHi": 1,
+            "dangerRatingLo": 1,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-10T22:00:00.000Z",
+            "endTime": "2022-04-12T10:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-08-01",
+            "dangerBorder": 0,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 2,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-11T05:27:16.000Z",
+            "endTime": "2022-04-12T06:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-08-02",
+            "dangerBorder": 0,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 2,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-11T05:27:16.000Z",
+            "endTime": "2022-04-12T06:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-08-03-01",
+            "dangerBorder": 0,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 2,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-11T05:27:16.000Z",
+            "endTime": "2022-04-12T06:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-08-03-02",
+            "dangerBorder": 0,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 2,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-11T05:27:16.000Z",
+            "endTime": "2022-04-12T06:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-08-04",
+            "dangerBorder": 0,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 2,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-11T05:27:16.000Z",
+            "endTime": "2022-04-12T06:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-08-05-01",
+            "dangerBorder": 0,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 2,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-11T05:27:16.000Z",
+            "endTime": "2022-04-12T06:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-08-05-02",
+            "dangerBorder": 0,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 2,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-11T05:27:16.000Z",
+            "endTime": "2022-04-12T06:00:00.000Z"
+        },
+        {
+            "regionCode": "AT-08-06",
+            "dangerBorder": 0,
+            "dangerRatingHi": 2,
+            "dangerRatingLo": 2,
+            "unfavorableStart": 0,
+            "unfavorableEnd": 0,
+            "startTime": "2022-04-11T05:27:16.000Z",
+            "endTime": "2022-04-12T06:00:00.000Z"
+        }
+    ]
     const reportLength = currentReport.length;
 
     let colorData = [];
