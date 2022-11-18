@@ -1361,13 +1361,30 @@ function buildReportTexture(painter: Painter) {
         colorData.push(packFloatToColor(regionReport.unfavorableStart));
         colorData.push(packFloatToColor(regionReport.unfavorableEnd));
     }
+    // Get the closest power of 2 for texture size
+    let paddedLength = reportLength - 1;
+    paddedLength |= paddedLength >> 1;
+    paddedLength |= paddedLength >> 2;
+    paddedLength |= paddedLength >> 4;
+    paddedLength |= paddedLength >> 8;
+    paddedLength |= paddedLength >> 16;
+    paddedLength++;
+
+
     colorData = colorData.flat();
-    let textureData = new Uint8Array(colorData.length);
-    for (let i = 0; i < colorData.length; i++) {
-        textureData[i] = colorData[i];
+    let textureData = new Uint8Array(paddedLength * paddedLength * 4);
+
+    let stride = 0;
+    let colorStride = 0;
+    for (let i = 0; i < colorData.length / 20; i++) {
+        for (let j = 0; j < 20; j++) {
+            textureData[stride + j] = colorData[colorStride + j];
+        }
+        stride += paddedLength * 4;
+        colorStride += 20;
     }
 
-    const reportImage = new RGBAImage({width: 5, height: reportLength}, textureData)
+    const reportImage = new RGBAImage({width: 128, height: 128}, textureData)
     return new Texture(context, reportImage, gl.RGBA, {premultiply: false});
 }
 

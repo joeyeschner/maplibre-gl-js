@@ -48,9 +48,10 @@ float aspectAmount(float aspect, float begin, float end, float transition) {
 }
 
 float getPackedTextureValue(float index, int column) {
-    float xOffset = float(column) * (1.0 / u_report_dimension.x) + ((1.0 / u_report_dimension.x) / 2.0);
+    vec2 offset = 1.0 / u_report_dimension;
+    //float xOffset = float(column) * offset.x + ((1.0 / u_report_dimension.x) / 2.0);
     vec4 bitShifts = vec4(256. * 256. * 256., 256. * 256., 256., 1.);
-    return dot((texture2D(u_report, vec2(xOffset, index / u_report_dimension.y))) * 255.0, bitShifts);
+    return dot(texture2D(u_report, vec2(float(column) * offset.x, index * offset.y)) * 255.0, bitShifts);
 }
 
 vec4 ratingToColor(float rating) {
@@ -217,7 +218,7 @@ void main() {
         //    gl_FragColor = mix(danger3, danger2, aspectAmount(aspect, unfavorableStart, unfavorableEnd, 45.0));
     }
 
-    //gl_FragColor = vec4(filteredIndex, 0, 0, 1);
+    // gl_FragColor = texture2D(u_report, v_pos);
 
     #ifdef OVERDRAW_INSPECTOR
     gl_FragColor = vec4(1.0);
