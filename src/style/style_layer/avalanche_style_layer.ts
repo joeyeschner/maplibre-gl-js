@@ -16,6 +16,7 @@ class AvalancheStyleLayer extends StyleLayer {
     paint: PossiblyEvaluated<AvalanchePaintProps, AvalanchePaintPropsPossiblyEvaluated>;
     regionsSource: string;
     reportTexture: Texture;
+    snowCardTexture: Texture;
     ratingColors: Array<Array<number>>;
 
     constructor(layer: LayerSpecification) {
@@ -1260,8 +1261,19 @@ class AvalancheStyleLayer extends StyleLayer {
             colorData.push(packFloatToColor(regionReport.unfavorableStart));
             colorData.push(packFloatToColor(regionReport.unfavorableEnd));
         }
+
+        const normalizedTexture = this.normalizeTexture(reportLength, colorData);
+        const textureData = normalizedTexture.textureData;
+        const sideLength = normalizedTexture.sideLength;
+
+        const reportImage = new RGBAImage({width: sideLength, height: sideLength}, textureData)
+        return new Texture(context, reportImage, gl.RGBA, {premultiply: false});
+    }
+
+    // Converts color data array to power of two sized texture data
+    private normalizeTexture(rowLength: number, colorData: any[]) {
         // Get the closest power of 2 for texture size
-        let paddedLength = reportLength - 1;
+        let paddedLength = rowLength - 1;
         paddedLength |= paddedLength >> 1;
         paddedLength |= paddedLength >> 2;
         paddedLength |= paddedLength >> 4;
@@ -1269,8 +1281,8 @@ class AvalancheStyleLayer extends StyleLayer {
         paddedLength |= paddedLength >> 16;
         paddedLength++;
 
-        // Length of one entry in the colorData array is number of report values * number of color channels (e.g. 5 * 4)
-        const entryLength = (colorData.length / currentReport.length) * 4;
+        // Length of one entry in the colorData array is number of values per row * number of color channels (e.g. 5 * 4)
+        const entryLength = (colorData.length / rowLength) * 4;
 
         colorData = colorData.flat();
         let textureData = new Uint8Array(paddedLength * paddedLength * 4);
@@ -1286,9 +1298,87 @@ class AvalancheStyleLayer extends StyleLayer {
             colorStride += entryLength;
         }
 
-        const reportImage = new RGBAImage({width: paddedLength, height: paddedLength}, textureData)
+        return {textureData: textureData, sideLength: paddedLength};
+    }
+
+    buildSnowCardTexture(painter: Painter) {
+        const favorable = [
+            [1, 1, 1, 2, 5],
+            [1, 1, 1, 3, 5],
+            [1, 1, 1, 4, 5],
+            [1, 1, 2, 4, 5],
+            [1, 1, 2, 5, 5],
+            [1, 2, 3, 5, 5],
+            [1, 2, 3, 5, 5],
+            [1, 2, 3, 5, 5],
+            [2, 2, 3, 5, 5],
+            [2, 2, 3, 5, 5],
+            [2, 2, 4, 5, 5],
+            [2, 3, 4, 5, 5],
+            [2, 3, 4, 5, 5],
+            [2, 3, 5, 5, 5],
+            [2, 3, 5, 5, 5],
+            [2, 3, 5, 5, 5]
+        ];
+
+        const unfavorable = [
+            [1, 1, 1, 2, 5],
+            [1, 1, 1, 3, 5],
+            [1, 1, 1, 4, 5],
+            [2, 2, 2, 5, 5],
+            [2, 2, 3, 5, 5],
+            [2, 2, 4, 5, 5],
+            [2, 3, 4, 5, 5],
+            [2, 3, 4, 5, 5],
+            [3, 4, 5, 5, 5],
+            [3, 4, 5, 5, 5],
+            [3, 4, 5, 5, 5],
+            [3, 4, 5, 5, 5],
+            [3, 5, 5, 5, 5],
+            [4, 5, 5, 5, 5],
+            [4, 5, 5, 5, 5],
+            [4, 5, 5, 5, 5]
+        ];
+
+        const context = painter.context;
+        const gl = context.gl;
+
+        let colorData = [];
+        for (let i = 0; i < favorable.length; i++) {
+            for (let j = 0; j < favorable[i].length * 2; j++) {
+                if (j < favorable[i].length) {
+                    colorData.push(this.convertRatingToColor(favorable[i][j]));
+                } else {
+                    colorData.push(this.convertRatingToColor(unfavorable[i][j - favorable[i].length]));
+                }
+            }
+        }
+
+        const normalizedTexture = this.normalizeTexture(favorable.length, colorData);
+        const textureData = normalizedTexture.textureData;
+        const sideLength = normalizedTexture.sideLength;
+        
+        const reportImage = new RGBAImage({width: sideLength, height: sideLength}, textureData)
         return new Texture(context, reportImage, gl.RGBA, {premultiply: false});
     }
+
+    convertRatingToColor(rating: number) {
+        switch (rating) {
+            case 1:
+                return [0, 255, 0, 255];
+            case 2:
+                return [255, 255, 0, 255];
+            case 3:
+                return [255, 136, 0, 255];
+            case 4:
+                return [255, 0, 0, 255];
+            case 5:
+                return [136, 0, 0, 255];
+            default:
+                return [255, 255, 255, 255];
+        }
+    }
+
 }
 
 export default AvalancheStyleLayer;

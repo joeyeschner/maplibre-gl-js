@@ -118,10 +118,23 @@ function prepareAvalanche(
         let reportTexture;
         if (!layer.reportTexture) {
             reportTexture = layer.buildReportTexture(painter);
+            layer.reportTexture = reportTexture;
         } else {
             reportTexture = layer.reportTexture;
         }
         reportTexture.bind(gl.NEAREST, gl.CLAMP_TO_EDGE);
+
+        // Snow card texture
+        context.activeTexture.set(gl.TEXTURE6);
+        let snowCardTexture;
+        if (!layer.snowCardTexture) {
+            snowCardTexture = layer.buildSnowCardTexture(painter);
+            layer.snowCardTexture = snowCardTexture;
+        } else {
+            snowCardTexture = layer.snowCardTexture;
+        }
+        snowCardTexture.bind(gl.NEAREST, gl.CLAMP_TO_EDGE);
+
 
         context.activeTexture.set(gl.TEXTURE0);
 

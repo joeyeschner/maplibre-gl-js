@@ -35,6 +35,7 @@ export type AvalanchePrepareUniformsType = {
     'u_matrix': UniformMatrix4f;
     'u_image': Uniform1i;
     'u_regions': Uniform1i;
+    'u_snow_card': Uniform1i;
     'u_report': Uniform1i;
     'u_report_dimension': Uniform2f;
     'u_ratings': UniformVector4f;
@@ -57,6 +58,7 @@ const avalanchePrepareUniforms = (context: Context, locations: UniformLocations)
     'u_matrix': new UniformMatrix4f(context, locations.u_matrix),
     'u_image': new Uniform1i(context, locations.u_image),
     'u_regions': new Uniform1i(context, locations.u_regions),
+    'u_snow_card': new Uniform1i(context, locations.u_snow_card),
     'u_report': new Uniform1i(context, locations.u_report),
     'u_report_dimension': new Uniform2f(context, locations.u_report_dimension),
     'u_ratings': new UniformVector4f(context, locations.u_ratings),
@@ -104,6 +106,7 @@ const avalancheUniformPrepareValues = (tileID: OverscaledTileID, dem: DEMData, r
         'u_matrix': matrix,
         'u_image': 1,
         'u_regions': 4,
+        'u_snow_card': 6,
         'u_report': 5,
         'u_report_dimension': reportSize,
         'u_ratings': ratingColors,

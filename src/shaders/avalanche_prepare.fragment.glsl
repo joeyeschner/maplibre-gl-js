@@ -5,6 +5,7 @@ precision highp float;
 uniform sampler2D u_image;
 uniform sampler2D u_regions;
 uniform sampler2D u_report;
+uniform sampler2D u_snow_card;
 uniform vec4 u_ratings[5];
 varying vec2 v_pos;
 uniform vec2 u_report_dimension;
@@ -218,7 +219,7 @@ void main() {
         //    gl_FragColor = mix(danger3, danger2, aspectAmount(aspect, unfavorableStart, unfavorableEnd, 45.0));
     }
 
-    // gl_FragColor = texture2D(u_report, v_pos);
+    gl_FragColor = texture2D(u_snow_card, v_pos);
 
     #ifdef OVERDRAW_INSPECTOR
     gl_FragColor = vec4(1.0);
