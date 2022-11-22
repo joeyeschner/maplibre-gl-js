@@ -15,6 +15,7 @@ class AvalancheStyleLayer extends StyleLayer {
     _transitioningPaint: Transitioning<AvalanchePaintProps>;
     paint: PossiblyEvaluated<AvalanchePaintProps, AvalanchePaintPropsPossiblyEvaluated>;
     regionsSource: string;
+    visualizationType: string;
     reportTexture: Texture;
     snowCardTexture: Texture;
     ratingColors: Array<Array<number>>;
@@ -22,6 +23,7 @@ class AvalancheStyleLayer extends StyleLayer {
     constructor(layer: LayerSpecification) {
         super(layer, properties);
         this.regionsSource = layer.layout['avalanche-regions-data'];
+        this.visualizationType = layer.layout['avalanche-visualization-type'];
         this.getRatingColors();
     }
 

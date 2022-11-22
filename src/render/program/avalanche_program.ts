@@ -42,6 +42,7 @@ export type AvalanchePrepareUniformsType = {
     'u_dimension': Uniform2f;
     'u_zoom': Uniform1f;
     'u_unpack': Uniform4f;
+    'u_visualization_type': Uniform1f;
 };
 
 const avalancheUniforms = (context: Context, locations: UniformLocations): AvalancheUniformsType => ({
@@ -64,7 +65,8 @@ const avalanchePrepareUniforms = (context: Context, locations: UniformLocations)
     'u_ratings': new UniformVector4f(context, locations.u_ratings),
     'u_dimension': new Uniform2f(context, locations.u_dimension),
     'u_zoom': new Uniform1f(context, locations.u_zoom),
-    'u_unpack': new Uniform4f(context, locations.u_unpack)
+    'u_unpack': new Uniform4f(context, locations.u_unpack),
+    'u_visualization_type': new Uniform1f(context, locations.u_visualization_type),
 });
 
 const avalancheUniformValues = (
@@ -94,13 +96,21 @@ const avalancheUniformValues = (
     };
 };
 
-const avalancheUniformPrepareValues = (tileID: OverscaledTileID, dem: DEMData, reportSize: [number, number], ratingColors: Array<Array<number>>): UniformValues<AvalanchePrepareUniformsType> => {
+const avalancheUniformPrepareValues = (
+    tileID: OverscaledTileID,
+    dem: DEMData,
+    reportSize: [number, number],
+    ratingColors: Array<Array<number>>,
+    visualizationType: string
+): UniformValues<AvalanchePrepareUniformsType> => {
 
     const stride = dem.stride;
     const matrix = mat4.create();
     // Flip rendering at y axis.
     mat4.ortho(matrix, 0, EXTENT, -EXTENT, 0, 0, 1);
     mat4.translate(matrix, matrix, [0, -EXTENT, 0]);
+
+    const visualizationTypeValue = visualizationType == 'rating' ? 0 : 1;
 
     return {
         'u_matrix': matrix,
@@ -112,7 +122,8 @@ const avalancheUniformPrepareValues = (tileID: OverscaledTileID, dem: DEMData, r
         'u_ratings': ratingColors,
         'u_dimension': [stride, stride],
         'u_zoom': tileID.overscaledZ,
-        'u_unpack': dem.getUnpackVector()
+        'u_unpack': dem.getUnpackVector(),
+        'u_visualization_type': visualizationTypeValue,
     };
 };
 

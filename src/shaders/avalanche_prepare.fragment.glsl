@@ -12,6 +12,7 @@ uniform vec2 u_report_dimension;
 uniform vec2 u_dimension;
 uniform float u_zoom;
 uniform vec4 u_unpack;
+uniform float u_visualization_type;
 
 #define PI 3.141592653589793
 
@@ -223,17 +224,22 @@ void main() {
     float interpolant = clamp((e - (dangerBorder - dangerBorderWidth)) / dangerBorderWidth, 0.0, 1.0);
 
     if (regionPixel.a != 0.0) {
-        //gl_FragColor = mix(dangerColorLo, dangerColorHi, interpolant) * vec4(0.5,0.5,0.5,1.0);
-        //} else if (regionPixel.r == 5.0/255.0 && regionPixel.g == 16.0/255.0) {
+        if (u_visualization_type < 0.5) {
+            // Show plain avalanche risk
+            gl_FragColor = mix(dangerColorLo, dangerColorHi, interpolant) * vec4(0.5,0.5,0.5,1.0);
+        } else {
+            // Show terrain based avalanche risk
 
-        // Calculate rating and angle to lookup in snowcard texture
-        float interpolatedRating = (mix(dangerRatingLo, dangerRatingHi, interpolant) - 1.0)/ 16.0;
-        float angle = clamp((getSlopeAngle(deriv) - 27.0) / 16.0, 0.0, 1.0);
+            // Calculate rating and angle to lookup in snowcard texture
+            float interpolatedRating = (mix(dangerRatingLo, dangerRatingHi, interpolant) - 1.0)/ 16.0;
+            float angle = clamp((getSlopeAngle(deriv) - 27.0) / 16.0, 0.0, 1.0);
 
 
-        vec2 snowCardPos = vec2(interpolatedRating + snowCardOffset, angle) + 1.0 / 32.0;
+            vec2 snowCardPos = vec2(interpolatedRating + snowCardOffset, angle) + 1.0 / 32.0;
 
-        gl_FragColor = texture2D(u_snow_card, snowCardPos) * vec4(vec3(0.5),1.0);
+            gl_FragColor = texture2D(u_snow_card, snowCardPos) * vec4(vec3(0.5),1.0);
+        }
+
         //gl_FragColor = texture2D(u_snow_card, v_pos);
 
     }

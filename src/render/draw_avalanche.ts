@@ -153,7 +153,7 @@ function prepareAvalanche(
 
         painter.useProgram('avalanchePrepare').draw(context, gl.TRIANGLES,
             depthMode, stencilMode, colorMode, CullFaceMode.disabled,
-            avalancheUniformPrepareValues(tile.tileID, dem, reportTexture.size, layer.getRatingColors()),
+            avalancheUniformPrepareValues(tile.tileID, dem, reportTexture.size, layer.getRatingColors(), layer.visualizationType),
             null, layer.id, painter.rasterBoundsBuffer,
             painter.quadTriangleIndexBuffer, painter.rasterBoundsSegments);
 
