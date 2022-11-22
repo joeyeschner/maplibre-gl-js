@@ -2576,6 +2576,28 @@
         }
       },
       "property-type": "constant"
+    },
+    "avalanche-visualization-type": {
+      "type": "enum",
+      "values": {
+        "rating": {
+          "doc": "Display plain avalanche rating based on height."
+        },
+        "terrain": {
+          "doc": "Display avalanche danger based on rating and terrain."
+        }
+      },
+      "default": "rating",
+      "doc": "Type of avalanche risk visualization.",
+      "sdk-support": {
+        "basic functionality": {
+          "js": "0.43.0",
+          "android": "6.0.0",
+          "ios": "4.0.0",
+          "macos": "0.7.0"
+        }
+      },
+      "property-type": "constant"
     }
   },
   "filter": {

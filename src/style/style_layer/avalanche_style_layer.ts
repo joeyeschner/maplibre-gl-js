@@ -22,6 +22,7 @@ class AvalancheStyleLayer extends StyleLayer {
     constructor(layer: LayerSpecification) {
         super(layer, properties);
         this.regionsSource = layer.layout['avalanche-regions-data'];
+        this.getRatingColors();
     }
 
     hasOffscreenPass() {
@@ -33,6 +34,7 @@ class AvalancheStyleLayer extends StyleLayer {
             this.parseRatingColors();
             return this.ratingColors;
         } else {
+            this.parseRatingColors();
             return this.ratingColors;
         }
     }
@@ -1347,9 +1349,9 @@ class AvalancheStyleLayer extends StyleLayer {
         for (let i = 0; i < favorable.length; i++) {
             for (let j = 0; j < favorable[i].length * 2; j++) {
                 if (j < favorable[i].length) {
-                    colorData.push(this.convertRatingToColor(favorable[i][j]));
+                    colorData.push(this.convertRatingToPaintColor(favorable[i][j]));
                 } else {
-                    colorData.push(this.convertRatingToColor(unfavorable[i][j - favorable[i].length]));
+                    colorData.push(this.convertRatingToPaintColor(unfavorable[i][j - favorable[i].length]));
                 }
             }
         }
@@ -1357,7 +1359,7 @@ class AvalancheStyleLayer extends StyleLayer {
         const normalizedTexture = this.normalizeTexture(favorable.length, colorData);
         const textureData = normalizedTexture.textureData;
         const sideLength = normalizedTexture.sideLength;
-        
+
         const reportImage = new RGBAImage({width: sideLength, height: sideLength}, textureData)
         return new Texture(context, reportImage, gl.RGBA, {premultiply: false});
     }
@@ -1377,6 +1379,11 @@ class AvalancheStyleLayer extends StyleLayer {
             default:
                 return [255, 255, 255, 255];
         }
+    }
+
+    convertRatingToPaintColor(rating: number) {
+        this.getRatingColors();
+        return this.ratingColors[rating - 1].map((component) => { return component * 255});
     }
 
 }

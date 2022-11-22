@@ -55,6 +55,25 @@ float getPackedTextureValue(float index, int column) {
     return dot(texture2D(u_report, vec2(float(column) * offset.x, index * offset.y)) * 255.0, bitShifts);
 }
 
+float getSlopeAngle(vec2 deriv) {
+    float maxGradientSlope = sqrt(deriv.x * deriv.x + deriv.y * deriv.y);
+
+    return atan(maxGradientSlope) * 180.0 / PI;
+}
+
+float getAspectAngle(vec2 deriv) {
+    float aspectAngle = 180.0/PI * atan(deriv.x, -deriv.y);
+
+    if (aspectAngle < 0.0)
+    aspectAngle = 90.0 - aspectAngle;
+    else if (aspectAngle > 90.0)
+    aspectAngle = 360.0 - aspectAngle + 90.0;
+    else
+    aspectAngle = 90.0 - aspectAngle;
+
+    return aspectAngle;
+}
+
 vec4 ratingToColor(float rating) {
     if (rating == 1.0) return u_ratings[0];
     if (rating == 2.0) return u_ratings[1];
@@ -163,7 +182,7 @@ void main() {
     // https://github.com/mapbox/mapbox-gl-js/pull/5286#discussion_r148419556
 
     float exaggerationFactor = u_zoom < 2.0 ? 0.4 : u_zoom < 4.5 ? 0.35 : 0.3;
-    float exaggeration = u_zoom < 15.0 ? (u_zoom - 15.0) * exaggerationFactor : 0.0;
+    float exaggeration = 0.0;
 
     // Get values from texture
     vec2 regionIncrement = 1.0 / u_dimension;
@@ -179,47 +198,45 @@ void main() {
     float dangerBorder = getDangerBorder(index);
     float dangerRatingHi = getDangerRatingHi(index);
     float dangerRatingLo = getDangerRatingLo(index);
-    float unfavorableStart = getUnfavorableStart(index);
-    float unfavorableEnd = getUnfavorableEnd(index);
+    float unfavorableStart = 45.0;//getUnfavorableStart(index);
+    float unfavorableEnd = 225.0; getUnfavorableEnd(index);
 
-    /*
+
     vec2 deriv = vec2(
         (c + f + f + i) - (a + d + d + g),
         (g + h + h + i) - (a + b + b + c)
     ) / 8.0 * 40075016.6855785 / (256.0 * pow(2.0, u_zoom));
 
-    float aspect = 180.0/PI * atan(deriv.x, -deriv.y);
 
-    if (aspect < 0.0)
-        aspect = 90.0 - aspect;
-    else if (aspect > 90.0)
-        aspect = 360.0 - aspect + 90.0;
-    else
-        aspect = 90.0 - aspect;
-
-    gl_FragColor = clamp(vec4(
-        deriv.x / 2.0 + 0.5,
-        deriv.y / 2.0 + 0.5,
-        1.0,
-        1.0), 0.0, 1.0);
-
-    gl_FragColor = vec4(0);
-    */
 
     float dangerBorderWidth = 200.0;
     vec4 dangerColorHi = ratingToColor(dangerRatingHi);
     vec4 dangerColorLo = ratingToColor(dangerRatingLo);
-    //vec4 danger2 = vec4(253.0,141.0,60.0,255.0) / 255.0;
-    //vec4 danger3 = vec4(166.0,54.0,3.0, 255.0) / 255.0;
+
+    float aspect = getAspectAngle(deriv);
+    float snowCardOffset = 0.0;
+
+    if (aspect >= unfavorableStart && aspect <= unfavorableEnd) {
+        snowCardOffset = 5.0/16.0;
+    }
+
     float interpolant = clamp((e - (dangerBorder - dangerBorderWidth)) / dangerBorderWidth, 0.0, 1.0);
 
     if (regionPixel.a != 0.0) {
-        gl_FragColor = mix(dangerColorLo, dangerColorHi, interpolant) * vec4(0.5,0.5,0.5,1.0);
+        //gl_FragColor = mix(dangerColorLo, dangerColorHi, interpolant) * vec4(0.5,0.5,0.5,1.0);
         //} else if (regionPixel.r == 5.0/255.0 && regionPixel.g == 16.0/255.0) {
-        //    gl_FragColor = mix(danger3, danger2, aspectAmount(aspect, unfavorableStart, unfavorableEnd, 45.0));
-    }
 
-    gl_FragColor = texture2D(u_snow_card, v_pos);
+        // Calculate rating and angle to lookup in snowcard texture
+        float interpolatedRating = (mix(dangerRatingLo, dangerRatingHi, interpolant) - 1.0)/ 16.0;
+        float angle = clamp((getSlopeAngle(deriv) - 27.0) / 16.0, 0.0, 1.0);
+
+
+        vec2 snowCardPos = vec2(interpolatedRating + snowCardOffset, angle) + 1.0 / 32.0;
+
+        gl_FragColor = texture2D(u_snow_card, snowCardPos) * vec4(vec3(0.5),1.0);
+        //gl_FragColor = texture2D(u_snow_card, v_pos);
+
+    }
 
     #ifdef OVERDRAW_INSPECTOR
     gl_FragColor = vec4(1.0);

@@ -81,9 +81,19 @@
                     id: 'avalanche_hills',
                     type: 'avalanche',
                     source: 'hillshadeSource',
+                    paint: {
+                        'avalanche-rating-color': [
+                            "#ffffb2",
+                            "#fecc5c",
+                            "#fd8d3c",
+                            "#f03b20",
+                            "#bd0026"
+                        ]
+                    },
                     layout: {
                         'visibility': 'visible',
-                        'avalanche-regions-data': 'regions'
+                        'avalanche-regions-data': 'regions',
+                        'avalanche-visualization-type': 'terrain'
                     }
                 }
             ],
@@ -108,6 +118,29 @@
             exaggeration: 1
         })
     );
+
+    /*
+    map.on('load',
+        () => {
+            map.addSource('track', {
+                type: 'geojson', // Use a URL for the value for the `data` property.
+                data: 'https://localhost:6666/storage/tracks/kitzsteinhorn.geojson'
+            });
+            map.addLayer({
+                'id': 'track',
+                'type': 'line',
+                'source': 'track',
+                'layout': {
+                    'line-join': 'round',
+                    'line-cap': 'round'
+                },
+                'paint': {
+                    'line-color': 'black',
+                    'line-width': 5
+                }
+            });
+        });
+     */
 
 </script>
 </body>

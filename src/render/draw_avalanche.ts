@@ -133,7 +133,7 @@ function prepareAvalanche(
         } else {
             snowCardTexture = layer.snowCardTexture;
         }
-        snowCardTexture.bind(gl.NEAREST, gl.CLAMP_TO_EDGE);
+        snowCardTexture.bind(gl.LINEAR , gl.CLAMP_TO_EDGE);
 
 
         context.activeTexture.set(gl.TEXTURE0);
