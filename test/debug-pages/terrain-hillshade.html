@@ -31,77 +31,7 @@
         center: [11.39085, 47.27574],
         pitch: 52,
         hash: true,
-        style: {
-            version: 8,
-            sources: {
-                regions: {
-                    type: 'raster',
-                    bounds: [8.782379, 46.358770, 17.5, 49.037872],
-                    tiles: ['https://alpinemaps.cg.tuwien.ac.at/tiles/at_regions_raster/{z}/{x}/{y}.png'],
-                    tileSize: 256,
-                    maxzoom: 15
-                },
-                osm: {
-                    type: 'raster',
-                    tiles: ['https://maps.wien.gv.at/basemap/bmaporthofoto30cm/normal/google3857/{z}/{y}/{x}.jpeg'],
-                    tileSize: 256,
-                    attribution: '&copy; OpenStreetMap Contributors',
-                    maxzoom: 19,
-                    bounds: [8.782379, 46.358770, 17.5, 49.037872]
-                },
-                terrainSource: {
-                    type: "raster-dem",
-                    tiles: ["https://alpinemaps.cg.tuwien.ac.at//tiles/mapbox_terrain_rgb/{z}/{x}/{y}.png"],
-                    tileSize: 256,
-                    maxzoom: 18,
-                    minzoom: 4,
-                    bounds: [8.782379, 46.358770, 17.5, 49.037872]
-                },
-                hillshadeSource: {
-                    type: "raster-dem",
-                    tiles: ["https://alpinemaps.cg.tuwien.ac.at//tiles/mapbox_terrain_rgb/{z}/{x}/{y}.png"],
-                    tileSize: 256,
-                    maxzoom: 18,
-                    minzoom: 4,
-                    bounds: [8.782379, 46.358770, 17.5, 49.037872]
-                }
-            },
-            layers: [
-                {
-                    id: 'regions',
-                    type: 'raster',
-                    source: 'regions'
-                },
-                {
-                    id: 'osm',
-                    type: 'raster',
-                    source: 'osm'
-                },
-                {
-                    id: 'avalanche_hills',
-                    type: 'avalanche',
-                    source: 'hillshadeSource',
-                    paint: {
-                        'avalanche-rating-color': [
-                            "#ffffb2",
-                            "#fecc5c",
-                            "#fd8d3c",
-                            "#f03b20",
-                            "#bd0026"
-                        ]
-                    },
-                    layout: {
-                        'visibility': 'visible',
-                        'avalanche-regions-data': 'regions',
-                        'avalanche-visualization-type': 'terrain'
-                    }
-                }
-            ],
-            terrain: {
-                source: 'terrainSource',
-                exaggeration: 1
-            }
-        },
+        style: './style.json',
         maxZoom: 18,
         maxPitch: 85
     });
