@@ -182,8 +182,6 @@ void main() {
     // See nickidlugash's awesome breakdown for more info:
     // https://github.com/mapbox/mapbox-gl-js/pull/5286#discussion_r148419556
 
-    float exaggerationFactor = u_zoom < 2.0 ? 0.4 : u_zoom < 4.5 ? 0.35 : 0.3;
-    float exaggeration = 0.0;
 
     // Get values from texture
     vec2 regionIncrement = 1.0 / u_dimension;
@@ -204,9 +202,9 @@ void main() {
 
 
     vec2 deriv = vec2(
-        (c + f + f + i) - (a + d + d + g),
-        (g + h + h + i) - (a + b + b + c)
-    ) / 8.0 * 40075016.6855785 / (256.0 * pow(2.0, u_zoom));
+    (c + f + f + i) - (a + d + d + g),
+    (g + h + h + i) - (a + b + b + c)
+    ) / (8.0 * 40075016.6855785 / (256.0 * pow(2.0, u_zoom)));
 
 
 
@@ -244,7 +242,7 @@ void main() {
 
     }
 
-    #ifdef OVERDRAW_INSPECTOR
+        #ifdef OVERDRAW_INSPECTOR
     gl_FragColor = vec4(1.0);
     #endif
 }
