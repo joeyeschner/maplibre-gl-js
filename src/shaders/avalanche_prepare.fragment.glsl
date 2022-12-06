@@ -32,20 +32,25 @@ float clampToCircle(float value) {
     return modI(value + 540.0, 360.0) + 180.0;
 }
 
-float aspectAmount(float aspect, float begin, float end, float transition) {
-    //begin = clampToCircle(begin);
-    //end = clampToCircle(end);
-    float bufferedBegin = clampToCircle(begin - transition);
-    float bufferedEnd = clampToCircle(end + transition);
-    if (aspect >= begin - transition && aspect <= end + transition) {
-        if (aspect < clampToCircle(begin + (begin - end) / 2.0)) {
-            return clamp((aspect - bufferedBegin) / transition, 1.0, 0.0);
+bool isFavorable(float aspect, float begin, float end) {
+    if (begin < end) {
+        if (aspect >= begin && aspect <= end) {
+            return true;
         } else {
-            return clamp((bufferedEnd + aspect) / transition, 0.0, 1.0);
+            return false;
         }
-        return 1.0;
+    } else if (begin > end) {
+        if (aspect >= 0.0 && aspect <= end || aspect >= begin && aspect <= 360.0) {
+            return true;
+        } else {
+            return false;
+        }
     } else {
-        return 1.0;
+        if (begin == 0.0) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }
 
@@ -197,8 +202,8 @@ void main() {
     float dangerBorder = getDangerBorder(index);
     float dangerRatingHi = getDangerRatingHi(index);
     float dangerRatingLo = getDangerRatingLo(index);
-    float unfavorableStart = 45.0;//getUnfavorableStart(index);
-    float unfavorableEnd = 225.0; getUnfavorableEnd(index);
+    float unfavorableStart = getUnfavorableStart(index);
+    float unfavorableEnd = getUnfavorableEnd(index);
 
 
     vec2 deriv = vec2(
@@ -215,7 +220,7 @@ void main() {
     float aspect = getAspectAngle(deriv);
     float snowCardOffset = 0.0;
 
-    if (aspect >= unfavorableStart && aspect <= unfavorableEnd) {
+    if (isFavorable(aspect, unfavorableStart, unfavorableEnd)) {
         snowCardOffset = 5.0/16.0;
     }
 
