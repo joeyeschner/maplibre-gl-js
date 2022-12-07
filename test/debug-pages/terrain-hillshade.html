@@ -85,11 +85,11 @@
                     source: 'hillshadeSource',
                     paint: {
                         'avalanche-rating-color': [
-                            "#ffffb2",
+                            "#ffffff",
                             "#fecc5c",
                             "#fd8d3c",
                             "#f03b20",
-                            "#bd0026"
+                            "#750d22"
                         ]
                     },
                     layout: {
@@ -121,6 +121,31 @@
             exaggeration: 1
         })
     );
+
+    map.on('load',
+        () => {
+            map.addSource('track', {
+                type: 'geojson', // Use a URL for the value for the `data` property.
+                data: 'https://localhost:6666/storage/tracks/kreuzeck.geojson'
+            });
+            map.addLayer({
+                'id': 'track',
+                'type': 'line',
+                'source': 'track',
+                'paint': {
+                    'line-color': [
+                        'match', ['get', 'dangerRating'],
+                        1, '#00ff00',
+                        2, '#ffff00',
+                        3, '#ff8800',
+                        4, '#ff0000',
+                        5, '#880000',
+                        'black'
+                    ],
+                    'line-width': 5
+                }
+            });
+        });
 
     function changeURL() {
         map.setLayoutProperty("avalanche_hills", "visibility", "none");
