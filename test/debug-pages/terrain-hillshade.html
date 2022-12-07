@@ -21,7 +21,9 @@
 </head>
 
 <body>
-<div id='map'></div>
+<div id='map'>
+    <button style="position: absolute; z-index: 10000" onclick="changeURL()">Switch Report</button>
+</div>
 
 <script src='../../dist/maplibre-gl-dev.js'></script>
 <script>
@@ -93,7 +95,8 @@
                     layout: {
                         'visibility': 'visible',
                         'avalanche-regions-data': 'regions',
-                        'avalanche-visualization-type': 'terrain'
+                        'avalanche-visualization-type': 'terrain',
+                        'avalanche-report-url': 'https://localhost:6666/reports/parsed/AT-all.json'
                     }
                 }
             ],
@@ -118,6 +121,34 @@
             exaggeration: 1
         })
     );
+
+    function changeURL() {
+        map.setLayoutProperty("avalanche_hills", "visibility", "none");
+        map.removeLayer("avalanche_hills");
+        map.redraw();
+        map.addLayer({
+            id: 'avalanche_hills',
+            type: 'avalanche',
+            source: 'hillshadeSource',
+            paint: {
+                'avalanche-rating-color': [
+                    "#ffffb2",
+                    "#fecc5c",
+                    "#fd8d3c",
+                    "#f03b20",
+                    "#bd0026"
+                ]
+            },
+            layout: {
+                'visibility': 'visible',
+                'avalanche-regions-data': 'regions',
+                'avalanche-visualization-type': 'terrain',
+                'avalanche-report-url': 'https://localhost:6666/reports/parsed/AT-all-max.json'
+            }
+        });
+    }
+
+
 
     /*
     map.on('load',

@@ -116,13 +116,19 @@ function prepareAvalanche(
         // Report Texture
         context.activeTexture.set(gl.TEXTURE5);
         let reportTexture;
+        let reportTextureSize: [number, number];
+        reportTextureSize = [0,0];
+
         if (!layer.reportTexture) {
-            reportTexture = layer.buildReportTexture(painter);
-            layer.reportTexture = reportTexture;
+            layer.buildReportTexture(painter);
+            reportTexture = layer.reportTexture;
         } else {
             reportTexture = layer.reportTexture;
         }
-        reportTexture.bind(gl.NEAREST, gl.CLAMP_TO_EDGE);
+        if (layer.reportTexture) {
+            reportTextureSize = reportTexture.size;
+            reportTexture.bind(gl.NEAREST, gl.CLAMP_TO_EDGE);
+        }
 
         // Snow card texture
         context.activeTexture.set(gl.TEXTURE6);
@@ -153,7 +159,7 @@ function prepareAvalanche(
 
         painter.useProgram('avalanchePrepare').draw(context, gl.TRIANGLES,
             depthMode, stencilMode, colorMode, CullFaceMode.disabled,
-            avalancheUniformPrepareValues(tile.tileID, dem, reportTexture.size, layer.getRatingColors(), layer.visualizationType),
+            avalancheUniformPrepareValues(tile.tileID, dem, reportTextureSize, layer.getRatingColors(), layer.visualizationType),
             null, layer.id, painter.rasterBoundsBuffer,
             painter.quadTriangleIndexBuffer, painter.rasterBoundsSegments);
 

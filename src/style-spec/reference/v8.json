@@ -2577,6 +2577,19 @@
       },
       "property-type": "constant"
     },
+    "avalanche-report-url": {
+      "type": "string",
+      "doc": "Link to a JSON file that contains the avalanche report to be displayed.",
+      "sdk-support": {
+        "basic functionality": {
+          "js": "0.43.0",
+          "android": "6.0.0",
+          "ios": "4.0.0",
+          "macos": "0.7.0"
+        }
+      },
+      "property-type": "constant"
+    },
     "avalanche-visualization-type": {
       "type": "enum",
       "values": {
