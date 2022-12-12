@@ -25,7 +25,7 @@
     <button style="position: absolute; z-index: 10000" onclick="changeURL()">Switch Report</button>
 </div>
 
-<script src='../../dist/maplibre-gl-dev.js'></script>
+<script src='../../dist/maplibre-gl.js'></script>
 <script>
     var map = window.map = new maplibregl.Map({
         container: 'map',
@@ -53,7 +53,7 @@
                 },
                 terrainSource: {
                     type: "raster-dem",
-                    tiles: ["https://alpinemaps.cg.tuwien.ac.at//tiles/mapbox_terrain_rgb/{z}/{x}/{y}.png"],
+                    tiles: ["https://alpinemaps.cg.tuwien.ac.at/tiles/mapbox_terrain_rgb/{z}/{x}/{y}.png"],
                     tileSize: 256,
                     maxzoom: 18,
                     minzoom: 4,
@@ -61,7 +61,7 @@
                 },
                 hillshadeSource: {
                     type: "raster-dem",
-                    tiles: ["https://alpinemaps.cg.tuwien.ac.at//tiles/mapbox_terrain_rgb/{z}/{x}/{y}.png"],
+                    tiles: ["https://alpinemaps.cg.tuwien.ac.at/tiles/at_dtm_mapbox_terrain_rgb/{z}/{x}/{y}.png"],
                     tileSize: 256,
                     maxzoom: 16,
                     minzoom: 4,
@@ -149,6 +149,7 @@
 
     function changeURL() {
         map.setLayoutProperty("avalanche_hills", "visibility", "none");
+
         map.removeLayer("avalanche_hills");
         map.redraw();
         map.addLayer({
@@ -157,18 +158,18 @@
             source: 'hillshadeSource',
             paint: {
                 'avalanche-rating-color': [
-                    "#ffffb2",
-                    "#fecc5c",
-                    "#fd8d3c",
-                    "#f03b20",
-                    "#bd0026"
+                    '#00ff00',
+                    '#ffff00',
+                    '#ff8800',
+                    '#ff0000',
+                    '#880000',
                 ]
             },
             layout: {
                 'visibility': 'visible',
                 'avalanche-regions-data': 'regions',
-                'avalanche-visualization-type': 'terrain',
-                'avalanche-report-url': 'https://localhost:6666/reports/parsed/AT-all-max.json'
+                'avalanche-visualization-type': 'rating',
+                'avalanche-report-url': 'https://localhost:6666/reports/parsed/AT-all.json'
             }
         });
     }
