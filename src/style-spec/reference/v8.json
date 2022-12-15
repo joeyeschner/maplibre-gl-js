@@ -2577,9 +2577,9 @@
       },
       "property-type": "constant"
     },
-    "avalanche-report-url": {
+    "avalanche-report": {
       "type": "string",
-      "doc": "Link to a JSON file that contains the avalanche report to be displayed.",
+      "doc": "A JSON string that contains the avalanche report to be displayed.",
       "sdk-support": {
         "basic functionality": {
           "js": "0.43.0",

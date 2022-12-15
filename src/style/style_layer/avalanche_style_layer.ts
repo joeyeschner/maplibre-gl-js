@@ -17,7 +17,7 @@ class AvalancheStyleLayer extends StyleLayer {
     regionsSource: string;
     visualizationType: string;
     reportTexture: Texture;
-    reportURL: string;
+    avalancheReport: string;
     snowCardTexture: Texture;
     ratingColors: Array<Array<number>>;
 
@@ -25,7 +25,7 @@ class AvalancheStyleLayer extends StyleLayer {
         super(layer, properties);
         this.regionsSource = layer.layout['avalanche-regions-data'];
         this.visualizationType = layer.layout['avalanche-visualization-type'];
-        this.reportURL = layer.layout['avalanche-report-url'];
+        this.avalancheReport = layer.layout['avalanche-report'];
         this.getRatingColors();
     }
 
@@ -51,40 +51,14 @@ class AvalancheStyleLayer extends StyleLayer {
         });
     }
 
-    // Load JSON file with avalanche report from url
-    getAvalancheReport(url: string) {
-        return new Promise(function (resolve, reject) {
-            let xhr = new XMLHttpRequest();
-            xhr.open('GET', url, true);
-            xhr.setRequestHeader('Accept', 'text/plain');
-            xhr.onerror = function (e) {
-                reject(e);
-            };
-            xhr.onload = function () {
-                if (xhr.status >= 200 && xhr.status < 300 && xhr.response) {
-                    var data;
-                    try {
-                        data = xhr.response;
-                    } catch (err) {
-                        reject(err);
-                    }
-                    resolve(data);
-                } else {
-                    reject(new Error(xhr.statusText));
-                }
-            };
-            xhr.send();
-        })
-    }
-
     // Convert avalanche report into texture to pass into avalanche shader
     buildReportTexture(painter: Painter) {
         const context = painter.context;
         const gl = context.gl;
         const self = this;
-        
-        this.getAvalancheReport(this.reportURL).then((reportData) => {
-            const currentReport = JSON.parse(reportData as string);
+
+        if (this.avalancheReport) {
+            const currentReport = JSON.parse(this.avalancheReport);
             const reportLength = currentReport.length;
             let colorData = [];
             for (let i = 0; i < reportLength; i++) {
@@ -102,9 +76,9 @@ class AvalancheStyleLayer extends StyleLayer {
 
             const reportImage = new RGBAImage({width: sideLength, height: sideLength}, textureData)
             self.reportTexture = new Texture(context, reportImage, gl.RGBA, {premultiply: false});
-        }).catch(function (err) {
-            console.log("Could not load requested avalanche report from server. Error: " + err.message);
-        })
+        } else {
+            console.log("Could not display load requested avalanche report. No valid report provided");
+        }
     }
 
     // Converts color data array to power of two sized texture data
