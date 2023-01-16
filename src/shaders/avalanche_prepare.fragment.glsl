@@ -6,7 +6,7 @@ uniform sampler2D u_image;
 uniform sampler2D u_regions;
 uniform sampler2D u_report;
 uniform sampler2D u_snow_card;
-uniform vec4 u_ratings[5];
+uniform vec4 u_ratings[9];
 varying vec2 v_pos;
 uniform vec2 u_report_dimension;
 uniform vec2 u_dimension;
@@ -60,7 +60,7 @@ float getPackedTextureValue(float index, int column) {
 float getSlopeAngle(vec2 deriv) {
     float maxGradientSlope = sqrt(deriv.x * deriv.x + deriv.y * deriv.y);
 
-    return atan(maxGradientSlope) * 180.0 / PI;
+    return atan(maxGradientSlope) * (180.0 / PI) + 9.0;
 }
 
 float getAspectAngle(vec2 deriv) {
@@ -84,7 +84,6 @@ vec4 ratingToColor(float rating) {
     if (rating == 5.0) return u_ratings[4];
     // if no valid rating don't show on map
     return vec4(0, 0, 0, 0);//u_ratings[0];
-
 }
 
 float getDangerBorder(float index) {
@@ -205,7 +204,7 @@ void main() {
     vec2 deriv = vec2(
     (c + f + f + i) - (a + d + d + g),
     (g + h + h + i) - (a + b + b + c)
-    ) / (8.0 * 40075016.6855785 / (256.0 * pow(2.0, u_zoom)));
+    ) / ((8.0 * 40075016.6855785) / (256.0 * pow(2.0, u_zoom)));
 
 
 
@@ -226,7 +225,7 @@ void main() {
         if (u_visualization_type < 0.5) {
             // Show plain avalanche risk
             gl_FragColor = mix(dangerColorLo, dangerColorHi, interpolant) * vec4(0.5,0.5,0.5,1.0);
-        } else {
+        } else if (u_visualization_type < 1.5){
             // Show terrain based avalanche risk
 
             // Calculate rating and angle to lookup in snowcard texture
@@ -242,6 +241,18 @@ void main() {
             if (getSlopeAngle(deriv) > 45.0) {
                 gl_FragColor = vec4(0.1,0.1,0.1,1.0);
             }
+        } else if (u_visualization_type < 2.5) {
+            float slopeAngle = getSlopeAngle(deriv);
+
+            if (slopeAngle - 9.0 < 9.0) { gl_FragColor = u_ratings[0]; } else
+            if (slopeAngle < 29.0) { gl_FragColor = u_ratings[1]; } else
+            if (slopeAngle < 34.0) { gl_FragColor = u_ratings[2]; } else
+            if (slopeAngle < 39.0) { gl_FragColor = u_ratings[3]; } else
+            if (slopeAngle < 42.0) { gl_FragColor = u_ratings[4]; } else
+            if (slopeAngle < 45.0) { gl_FragColor = u_ratings[5]; } else
+            if (slopeAngle < 49.0) { gl_FragColor = u_ratings[6]; } else
+            if (slopeAngle < 54.0) { gl_FragColor = u_ratings[7]; }
+            else { gl_FragColor = gl_FragColor = u_ratings[8]; }
         }
 
         //gl_FragColor = texture2D(u_snow_card, v_pos);

@@ -2598,6 +2598,9 @@
         },
         "terrain": {
           "doc": "Display avalanche danger based on rating and terrain."
+        },
+        "slope": {
+          "doc": "Display the slope of the terrain."
         }
       },
       "default": "rating",
@@ -6124,7 +6127,6 @@
     "avalanche-rating-color": {
       "type": "array",
       "value": "color",
-      "length": 5,
       "default": [
         "#00ff00",
         "#ffff00",

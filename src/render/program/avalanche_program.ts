@@ -110,7 +110,10 @@ const avalancheUniformPrepareValues = (
     mat4.ortho(matrix, 0, EXTENT, -EXTENT, 0, 0, 1);
     mat4.translate(matrix, matrix, [0, -EXTENT, 0]);
 
-    const visualizationTypeValue = visualizationType == 'rating' ? 0 : 1;
+    let visualizationTypeValue = visualizationType == 'rating' ? 0 : 1;
+    if (visualizationType === 'slope') {
+        visualizationTypeValue = 2;
+    }
 
     return {
         'u_matrix': matrix,
