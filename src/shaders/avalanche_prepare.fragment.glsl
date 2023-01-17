@@ -28,7 +28,7 @@ float modI(float a, float b) {
     return floor(m+0.5);
 }
 
-bool isFavorable(float aspect, float begin, float end) {
+bool isUnFavorable(float aspect, float begin, float end) {
     if (begin < end) {
         if (aspect >= begin && aspect <= end) {
             return false;
@@ -215,7 +215,7 @@ void main() {
     float aspect = getAspectAngle(deriv);
     float snowCardOffset = 0.0;
 
-    if (!isFavorable(aspect, unfavorableStart, unfavorableEnd)) {
+    if (isUnFavorable(aspect, unfavorableStart, unfavorableEnd)) {
         snowCardOffset = 5.0/16.0;
     }
 
