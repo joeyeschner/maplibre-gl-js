@@ -253,15 +253,13 @@ void main() {
         } else if (u_visualization_type < 2.5) {
             float slopeAngle = getSlopeAngle(deriv);
 
-            if (slopeAngle - 9.0 < 9.0) { gl_FragColor = u_ratings[0]; } else
-            if (slopeAngle < 29.0) { gl_FragColor = u_ratings[1]; } else
-            if (slopeAngle < 34.0) { gl_FragColor = u_ratings[2]; } else
-            if (slopeAngle < 39.0) { gl_FragColor = u_ratings[3]; } else
-            if (slopeAngle < 42.0) { gl_FragColor = u_ratings[4]; } else
-            if (slopeAngle < 45.0) { gl_FragColor = u_ratings[5]; } else
-            if (slopeAngle < 49.0) { gl_FragColor = u_ratings[6]; } else
-            if (slopeAngle < 54.0) { gl_FragColor = u_ratings[7]; }
-            else { gl_FragColor = gl_FragColor = u_ratings[8]; }
+            if (slopeAngle < 30.0) { gl_FragColor = u_ratings[0]; } else
+            if (slopeAngle < 35.0) { gl_FragColor = u_ratings[1]; } else
+            if (slopeAngle < 40.0) { gl_FragColor = u_ratings[2]; } else
+            if (slopeAngle < 45.0) { gl_FragColor = u_ratings[3]; }
+            else { gl_FragColor = gl_FragColor = u_ratings[4]; }
+
+            gl_FragColor *= vec4(0.5,0.5,0.5,1.0);
         }
 
         //gl_FragColor = texture2D(u_snow_card, v_pos);
