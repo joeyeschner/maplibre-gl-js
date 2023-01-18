@@ -28,31 +28,38 @@ float modI(float a, float b) {
     return floor(m+0.5);
 }
 
-bool isUnFavorable(float aspect, float begin, float end) {
-    if (begin < end) {
-        if (aspect >= begin && aspect <= end) {
-            return false;
-        } else {
-            return true;
-        }
-    } else if (begin > end) {
-        if (aspect >= 0.0 && aspect <= end || aspect >= begin && aspect <= 360.0) {
-            return false;
-        } else {
-            return true;
+vec4 arrayIndexToVec4(int index) {
+    vec4 result = vec4(0);
+    if (index == 0) {result.r = 1.0;} else
+    if (index == 1) {result.g = 1.0;} else
+    if (index == 2) {result.b = 1.0;} else
+    if (index == 3) {result.a = 1.0;}
+
+    return result;
+}
+
+bool isUnfavorable(float aspect, vec4 unfavorableStart, vec4 unfavorableEnd) {
+    // Convert angle in one of 8 directions (+22.5 to shift from [337.5,337.5] to [0,360] for easier calculation)
+    float range = 360.0 / 8.0;
+    int index = int((modI(aspect + 22.5, 360.0)) / range);
+    bool unfavorable = false;
+
+    // Check with corresponding binary vec4 via dot product to see if current angle is unfavorable
+    if (index < 4) {
+        if (dot(arrayIndexToVec4(index),unfavorableStart) == 1.0) {
+            unfavorable = true;
         }
     } else {
-        if (begin == 0.0) {
-            return true;
-        } else {
-            return false;
+        index -= 4;
+        if (dot(arrayIndexToVec4(index),unfavorableEnd) == 1.0) {
+            unfavorable = true;
         }
     }
+    return unfavorable;
 }
 
 float getPackedTextureValue(float index, int column) {
     vec2 offset = 1.0 / u_report_dimension;
-    //float xOffset = float(column) * offset.x + ((1.0 / u_report_dimension.x) / 2.0);
     vec4 bitShifts = vec4(256. * 256. * 256., 256. * 256., 256., 1.);
     return dot(texture2D(u_report, vec2(float(column) * offset.x, index * offset.y)) * 255.0, bitShifts);
 }
@@ -64,7 +71,8 @@ float getSlopeAngle(vec2 deriv) {
 }
 
 float getAspectAngle(vec2 deriv) {
-    float aspectAngle = 180.0/PI * atan(deriv.x, -deriv.y);
+    float aspectAngle = 180.0/PI * atan(deriv.y, -deriv.x);
+
 
     if (aspectAngle < 0.0)
     aspectAngle = 90.0 - aspectAngle;
@@ -98,12 +106,14 @@ float getDangerRatingLo(float index) {
     return getPackedTextureValue(index, 2);
 }
 
-float getUnfavorableStart(float index) {
-    return getPackedTextureValue(index, 3);
+vec4 getUnfavorableStart(float index) {
+    vec2 offset = 1.0 / u_report_dimension;
+    return texture2D(u_report, vec2(float(3) * offset.x, index * offset.y)) * 255.0;
 }
 
-float getUnfavorableEnd(float index) {
-    return getPackedTextureValue(index, 4);
+vec4 getUnfavorableEnd(float index) {
+    vec2 offset = 1.0 / u_report_dimension;
+    return texture2D(u_report, vec2(float(4) * offset.x, index * offset.y) * 255.0);
 }
 
 float getIndex(vec4 neighbors, float index) {
@@ -139,7 +149,6 @@ float getIndex(vec4 neighbors, float index) {
         }
         return values[4];
     }
-    return 0.0;
 }
 
 void main() {
@@ -184,7 +193,6 @@ void main() {
 
 
     // Get values from texture
-    vec2 regionIncrement = 1.0 / u_dimension;
     vec4 regionPixel = texture2D(u_regions, v_pos);
     vec4 top = texture2D(u_regions, v_pos + vec2(0, -epsilon.y));
     vec4 right = texture2D(u_regions, v_pos + vec2(epsilon.x, 0));
@@ -197,8 +205,8 @@ void main() {
     float dangerBorder = getDangerBorder(index);
     float dangerRatingHi = getDangerRatingHi(index);
     float dangerRatingLo = getDangerRatingLo(index);
-    float unfavorableStart = getUnfavorableStart(index);
-    float unfavorableEnd = getUnfavorableEnd(index);
+    vec4 unfavorableStart = getUnfavorableStart(index);
+    vec4 unfavorableEnd = getUnfavorableEnd(index);
 
 
     vec2 deriv = vec2(
@@ -215,7 +223,8 @@ void main() {
     float aspect = getAspectAngle(deriv);
     float snowCardOffset = 0.0;
 
-    if (isUnFavorable(aspect, unfavorableStart, unfavorableEnd)) {
+    // Choose snowcard version based on exposition
+    if (isUnfavorable(aspect, unfavorableStart, unfavorableEnd)) {
         snowCardOffset = 5.0/16.0;
     }
 
@@ -237,7 +246,7 @@ void main() {
 
             gl_FragColor = texture2D(u_snow_card, snowCardPos) * vec4(vec3(0.5),1.0);
 
-            // Draw rocks (slope over 45 degrees) grey
+            // Draw slope over 45 degrees grey
             if (getSlopeAngle(deriv) > 45.0) {
                 gl_FragColor = vec4(0.1,0.1,0.1,1.0);
             }

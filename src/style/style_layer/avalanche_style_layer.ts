@@ -5,7 +5,7 @@ import properties, {AvalanchePaintPropsPossiblyEvaluated} from './avalanche_styl
 import {PossiblyEvaluated, Transitionable, Transitioning} from '../properties';
 import type {LayerSpecification} from '../../style-spec/types.g';
 import Painter from "../../render/painter";
-import {packFloatToColor} from "../../shaders/encode_attribute";
+import {packFloatToColor, packUint8Vec4ToColor} from "../../shaders/encode_attribute";
 import {RGBAImage} from "../../util/image";
 import Texture from "../../render/texture";
 import Color from "../../style-spec/util/color";
@@ -51,6 +51,19 @@ class AvalancheStyleLayer extends StyleLayer {
         });
     }
 
+    parseUnfavorableInt(num, first) {
+        const binary = num.toString(2);
+        let binaryArray = binary.split('').map(function (x) {
+            return parseInt(x);
+        });
+        const padding = 8 - binaryArray.length;
+        for (let i = 0; i < padding; i++) {
+            binaryArray.unshift(0);
+        }
+        return first ? binaryArray.slice(0,4) : binaryArray.slice(4,8);
+    }
+
+
     // Convert avalanche report into texture to pass into avalanche shader
     buildReportTexture(painter: Painter) {
         const context = painter.context;
@@ -66,8 +79,9 @@ class AvalancheStyleLayer extends StyleLayer {
                 colorData.push(packFloatToColor(regionReport.dangerBorder));
                 colorData.push(packFloatToColor(regionReport.dangerRatingHi));
                 colorData.push(packFloatToColor(regionReport.dangerRatingLo));
-                colorData.push(packFloatToColor(regionReport.unfavorableStart));
-                colorData.push(packFloatToColor(regionReport.unfavorableEnd));
+                colorData.push(packUint8Vec4ToColor(this.parseUnfavorableInt(regionReport.unfavorable, true)));
+                colorData.push(packUint8Vec4ToColor(this.parseUnfavorableInt(regionReport.unfavorable, false)));
+                colorData.push(packFloatToColor(regionReport.unfavorable))
             }
 
             const normalizedTexture = AvalancheStyleLayer.normalizeTexture(reportLength, colorData);

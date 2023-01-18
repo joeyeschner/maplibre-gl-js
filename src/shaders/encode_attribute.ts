@@ -22,6 +22,14 @@ export function packFloatToColor(value: number) {
     return [r, g, b, a];
 }
 
+export function packUint8Vec4ToColor(value: Array<number>) {
+    const r = clamp(Math.floor(value[0]), 0, 255);
+    const g = clamp(Math.floor(value[1]), 0, 255);
+    const b = clamp(Math.floor(value[2]), 0, 255);
+    const a = clamp(Math.floor(value[3]), 0, 255);
+    return [r, g, b, a];
+}
+
 export function unpackColorToFloat(value: Array<number>) {
     return value[0] * 256 * 256 * 256 + value[1] * 256 * 256 + value[2] * 256 + value[3];
 }
