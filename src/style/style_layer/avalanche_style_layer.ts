@@ -76,6 +76,8 @@ class AvalancheStyleLayer extends StyleLayer {
             let colorData = [];
             for (let i = 0; i < reportLength; i++) {
                 const regionReport = currentReport[i];
+                // If forest line was given as height border we assume a lower bound of the timberline (https://www.zobodat.at/pdf/Jb-Verein-Schutz-Alpenpfl-Tiere_35_1970_0121-0153.pdf)
+                if (!parseInt(regionReport.dangerBorder)) { regionReport.dangerBorder = 1600;}
                 colorData.push(packFloatToColor(regionReport.dangerBorder));
                 colorData.push(packFloatToColor(regionReport.dangerRatingHi));
                 colorData.push(packFloatToColor(regionReport.dangerRatingLo));
