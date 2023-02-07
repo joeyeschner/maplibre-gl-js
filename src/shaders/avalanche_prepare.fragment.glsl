@@ -46,12 +46,12 @@ bool isUnfavorable(float aspect, vec4 unfavorableStart, vec4 unfavorableEnd) {
 
     // Check with corresponding binary vec4 via dot product to see if current angle is unfavorable
     if (index < 4) {
-        if (dot(arrayIndexToVec4(index),unfavorableStart) == 1.0) {
+        if (dot(arrayIndexToVec4(index),unfavorableStart) > 0.0) {
             unfavorable = true;
         }
     } else {
-        index -= 4;
-        if (dot(arrayIndexToVec4(index),unfavorableEnd) == 1.0) {
+        index = index - 4;
+        if (dot(arrayIndexToVec4(index),unfavorableEnd) > 0.0) {
             unfavorable = true;
         }
     }
@@ -108,12 +108,12 @@ float getDangerRatingLo(float index) {
 
 vec4 getUnfavorableStart(float index) {
     vec2 offset = 1.0 / u_report_dimension;
-    return texture2D(u_report, vec2(float(3) * offset.x, index * offset.y)) * 255.0;
+    return texture2D(u_report, vec2(float(3) * offset.x, index * offset.y));
 }
 
 vec4 getUnfavorableEnd(float index) {
     vec2 offset = 1.0 / u_report_dimension;
-    return texture2D(u_report, vec2(float(4) * offset.x, index * offset.y) * 255.0);
+    return texture2D(u_report, vec2(float(4) * offset.x, index * offset.y));
 }
 
 float getIndex(vec4 neighbors, float index) {
@@ -148,6 +148,15 @@ float getIndex(vec4 neighbors, float index) {
             }
         }
         return values[4];
+    }
+}
+
+bool isGo(float angle, float rating) {
+    if (rating > 4.0) {
+        return false;
+    } else {
+        angle = ceil((clamp(angle - 29.0, 0.0, 180.0) + 5.0) / 5.0);
+        return (angle * rating) < 8.0;
     }
 }
 
@@ -260,13 +269,27 @@ void main() {
             else { gl_FragColor = gl_FragColor = u_ratings[4]; }
 
             gl_FragColor *= vec4(0.5,0.5,0.5,1.0);
+        } else if (u_visualization_type < 3.5) {
+            float interpolatedRating = (mix(dangerRatingLo, dangerRatingHi, interpolant) - 1.0);
+            float slopeAngle = getSlopeAngle(deriv);
+            bool goFactor = false;
+            goFactor = isGo(slopeAngle, interpolatedRating);
+
+            if (goFactor) {
+                gl_FragColor = vec4(u_ratings[1].r, 0, 0, 0);
+            } else {
+                gl_FragColor = u_ratings[1];
+            }
+
+            /*
+            if (getSlopeAngle(deriv) > 45.0) {
+                gl_FragColor = vec4(0.1,0.1,0.1,1.0);
+            }
+            */
         }
-
-        //gl_FragColor = texture2D(u_snow_card, v_pos);
-
     }
 
-        #ifdef OVERDRAW_INSPECTOR
+    #ifdef OVERDRAW_INSPECTOR
     gl_FragColor = vec4(1.0);
     #endif
 }

@@ -113,6 +113,9 @@ const avalancheUniformPrepareValues = (
     let visualizationTypeValue = visualizationType == 'rating' ? 0 : 1;
     if (visualizationType === 'slope') {
         visualizationTypeValue = 2;
+    } else if (visualizationType === 'stop-or-go') {
+        visualizationTypeValue = 3;
+
     }
 
     return {

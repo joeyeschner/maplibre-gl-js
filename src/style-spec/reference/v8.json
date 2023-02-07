@@ -2601,6 +2601,9 @@
         },
         "slope": {
           "doc": "Display the slope of the terrain."
+        },
+        "stop-or-go": {
+          "doc": "Display the terrain evaluation based on the Stop-or-Go."
         }
       },
       "default": "rating",
