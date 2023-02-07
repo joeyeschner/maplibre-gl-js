@@ -171,12 +171,14 @@ class AvalancheStyleLayer extends StyleLayer {
         const gl = context.gl;
 
         let colorData = [];
-        for (let i = 0; i < favorable.length; i++) {
-            for (let j = 0; j < favorable[i].length * 2; j++) {
-                if (j < favorable[i].length) {
-                    colorData.push(this.convertRatingToPaintColor(favorable[i][j]));
-                } else {
-                    colorData.push(this.convertRatingToPaintColor(unfavorable[i][j - favorable[i].length]));
+        if (this.visualizationType != 'stop-or-go') {
+            for (let i = 0; i < favorable.length; i++) {
+                for (let j = 0; j < favorable[i].length * 2; j++) {
+                    if (j < favorable[i].length) {
+                        colorData.push(this.convertRatingToPaintColor(favorable[i][j]));
+                    } else {
+                        colorData.push(this.convertRatingToPaintColor(unfavorable[i][j - favorable[i].length]));
+                    }
                 }
             }
         }
