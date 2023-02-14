@@ -3024,6 +3024,16 @@ class Map extends Camera {
     getCameraTargetElevation(): number {
         return this.transform.elevation;
     }
+
+    /// map.ts
+    getElevationOnTerrain(lnglat: LngLat) {
+        const terrain = this.terrain;
+        if (terrain) {
+            lnglat = LngLat.convert(lnglat);
+            return (this.transform.getElevation(lnglat, terrain) * terrain.exaggeration) / terrain.exaggeration;
+        }
+        return 0;
+    }
 }
 
 export default Map;
