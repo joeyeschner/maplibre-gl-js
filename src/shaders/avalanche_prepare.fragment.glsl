@@ -270,7 +270,7 @@ void main() {
 
             gl_FragColor *= vec4(0.5,0.5,0.5,1.0);
         } else if (u_visualization_type < 3.5) {
-            float interpolatedRating = (mix(dangerRatingLo, dangerRatingHi, interpolant) - 1.0);
+            float interpolatedRating = (mix(dangerRatingLo, dangerRatingHi, interpolant));
             float slopeAngle = getSlopeAngle(deriv);
             bool goFactor = false;
             goFactor = isGo(slopeAngle, interpolatedRating);
