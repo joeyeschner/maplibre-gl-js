@@ -156,6 +156,41 @@ export default class Terrain {
     }
 
     /**
+     * get the Gradient for given coordinate over a 3x3 pixel window.
+     * @param {OverscaledTileID} tileID - the tile id
+     * @param {number} x between 0 .. EXTENT
+     * @param {number} y between 0 .. EXTENT
+     * @param {number} extent optional, default 8192
+     * @returns {number} - the gradient in x and y direction
+     */
+    getGradient(tileID: OverscaledTileID, x: number, y: number, extent: number = EXTENT): Array<number> {
+        if (!(x >= 0 && x < extent && y >= 0 && y < extent)) return [0,0];
+        let gradient = [0,0];
+        const terrain = this.getTerrainData(tileID);
+        if (terrain.tile && terrain.tile.dem) {
+            const pos = vec2.transformMat4([] as any, [x / extent * EXTENT, y / extent * EXTENT], terrain.u_terrain_matrix);
+            const coord = [pos[0] * terrain.tile.dem.dim, pos[1] * terrain.tile.dem.dim];
+            const posPixel = [Math.floor(coord[0]), Math.floor(coord[1])];
+
+            const a = terrain.tile.dem.get(posPixel[0] - 1, posPixel[1] - 1);
+            const b = terrain.tile.dem.get(posPixel[0], posPixel[1] - 1);
+            const c = terrain.tile.dem.get(posPixel[0] + 1, posPixel[1] - 1);
+            const d = terrain.tile.dem.get(posPixel[0] - 1, posPixel[1]);
+            const e = terrain.tile.dem.get(posPixel[0], posPixel[1]);
+            const f = terrain.tile.dem.get(posPixel[0] + 1, posPixel[1]);
+            const g = terrain.tile.dem.get(posPixel[0] - 1, posPixel[1] + 1);
+            const h = terrain.tile.dem.get(posPixel[0], posPixel[1] + 1);
+            const i = terrain.tile.dem.get(posPixel[0] + 1, posPixel[1] + 1);
+
+            const dzdx = ((c + 2 * f + i) - (a + 2 * d + g)) / ((8.0 * 40075016.6855785) / (256.0 * Math.pow(2.0, tileID.overscaledZ)));
+            const dzdy = ((g + 2 * h + i) - (a + 2 * b + c)) / ((8.0 * 40075016.6855785) / (256.0 * Math.pow(2.0, tileID.overscaledZ)));
+
+            gradient = [dzdx, dzdy];
+        }
+        return gradient;
+    }
+
+    /**
      * returns a Terrain Object for a tile. Unless the tile corresponds to data (e.g. tile is loading), return a flat dem object
      * @param {OverscaledTileID} tileID - the tile to get the terrain for
      * @returns {TerrainData} the terrain data to use in the program

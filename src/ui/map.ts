@@ -3034,6 +3034,15 @@ class Map extends Camera {
         }
         return 0;
     }
+
+    getGradientOnTerrain(lnglat: LngLat) {
+        const terrain = this.terrain;
+        if (terrain) {
+            lnglat = LngLat.convert(lnglat);
+            return (this.transform.getGradient(lnglat, terrain));
+        }
+        return [0,0];
+    }
 }
 
 export default Map;

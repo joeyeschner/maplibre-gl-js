@@ -505,6 +505,21 @@ class Transform {
     }
 
     /**
+     * get the gradient from terrain for the current zoomlevel.
+     * @param lnglat the location
+     * @param terrain the terrain
+     * @returns {number} gradient
+     */
+    getGradient(lnglat: LngLat, terrain: Terrain) {
+        const merc = MercatorCoordinate.fromLngLat(lnglat);
+        const worldSize = (1 << this.tileZoom) * EXTENT;
+        const mercX = merc.x * worldSize, mercY = merc.y * worldSize;
+        const tileX = Math.floor(mercX / EXTENT), tileY = Math.floor(mercY / EXTENT);
+        const tileID = new OverscaledTileID(this.tileZoom, 0, this.tileZoom, tileX, tileY);
+        return terrain.getGradient(tileID, mercX % EXTENT, mercY % EXTENT, EXTENT);
+    }
+
+    /**
      * get the camera position in LngLat and altitudes in meter
      * @returns {Object} An object with lngLat & altitude.
      */
