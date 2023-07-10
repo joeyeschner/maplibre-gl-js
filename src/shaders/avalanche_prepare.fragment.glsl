@@ -94,6 +94,17 @@ vec4 ratingToColor(float rating) {
     return vec4(0, 0, 0, 0);//u_ratings[0];
 }
 
+vec4 ratingToStopOrGoColor(float rating) {
+
+    if (rating == 1.0) return vec4(0, 1, 0, 1);
+    if (rating == 2.0) return vec4(1, 1, 0, 1);
+    if (rating == 3.0) return vec4(1, 0.5, 0, 1);
+    if (rating == 4.0) return vec4(1, 0, 0, 1);
+    if (rating == 5.0) return vec4(0.5, 0, 0, 1);
+    // if no valid rating don't show on map
+    return vec4(0, 0, 0, 0);//u_ratings[0];
+}
+
 float getDangerBorder(float index) {
     return getPackedTextureValue(index, 0);
 }
@@ -274,11 +285,16 @@ void main() {
             float slopeAngle = getSlopeAngle(deriv);
             bool goFactor = false;
             goFactor = isGo(slopeAngle, interpolatedRating);
+            dangerColorLo = ratingToStopOrGoColor(dangerRatingLo);
+            dangerColorHi = ratingToStopOrGoColor(dangerRatingHi);
+            vec4 ratingColor = mix(dangerColorLo, dangerColorHi, interpolant) * vec4(0.5,0.5,0.5,1.0);
 
             if (goFactor) {
-                gl_FragColor = vec4(u_ratings[1].r, 0, 0, 0);
+                gl_FragColor = vec4(ratingColor.r, ratingColor.g, ratingColor.b, 0);
             } else {
-                gl_FragColor = u_ratings[1];
+                //gl_FragColor = u_ratings[1];
+
+                gl_FragColor = ratingColor;
             }
 
             /*
